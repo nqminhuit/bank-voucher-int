@@ -1,10 +1,10 @@
-package com.nqminhuit.bankservice;
+package com.nqminhuit.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BankServiceApplicationTests {
+class GatewayApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nqminhuit</groupId>
-	<artifactId>bank-service</artifactId>
+	<artifactId>gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>bank-service</name>
-	<description>bank service</description>
+	<name>gateway</name>
+	<description>third party server which provide voucher code for the bank system</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
