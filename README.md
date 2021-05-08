@@ -58,5 +58,9 @@ Has:
 - 1 kafka **consumer** to **receive-code** topic
 
 # Development
+start zookeeper and kafka servers:
+```bash
+$ docker-compose up -d
+```
 
 # API testing
