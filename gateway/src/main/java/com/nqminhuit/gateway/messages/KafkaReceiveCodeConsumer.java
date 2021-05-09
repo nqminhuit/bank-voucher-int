@@ -11,11 +11,6 @@ public class KafkaReceiveCodeConsumer {
 
     Logger log = LoggerFactory.getLogger(KafkaReceiveCodeConsumer.class);
 
-    // @KafkaListener(topics = Constants.TOPIC_REQUEST_CODE, groupId = "req-group")
-    // public void listenToRequestCode(String message) {
-    //     log.info("listen to request code message: {}", message);
-    // }
-
     @KafkaListener(topics = Constants.TOPIC_RECEIVE_CODE, groupId = "rec-group")
     public void listenToReceiveCode(String message) {
         log.info("listen to receive code message: {}", message);
