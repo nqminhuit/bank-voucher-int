@@ -1,19 +1,40 @@
 package com.nqminhuit.voucherintservice.clients;
 
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.ClientResponse;
+import com.nqminhuit.voucherintservice.messages.KafkaReceiveCodeProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
+@Component
 public class VoucherProviderClient {
-    private static WebClient client = WebClient.create("http://localhost:8081"); // TODO get from properties
 
-    private static Mono<ClientResponse> result = client.post()
+    private static final Logger log = LoggerFactory.getLogger(VoucherProviderClient.class);
+
+    private static WebClient vpsClient = WebClient.create("http://localhost:8081"); // TODO get from properties
+
+    @Autowired
+    private KafkaReceiveCodeProducer kafkaReceiveCodeProducer;
+
+    public void requestForVoucherCode() {
+        vpsClient.post()
         .uri("/api/request/voucher")
-        .accept(MediaType.TEXT_PLAIN)
-        .exchange();
-
-    public static String requestForVoucherCode() {
-        return ">>> result = " + result.flatMap(res -> res.bodyToMono(String.class)).block();
+            .retrieve()
+            .bodyToMono(String.class)
+            .subscribe(
+                data -> {
+                    log.info("##new## data: {}", data);
+                    if (data.startsWith("###code###")) {
+                        kafkaReceiveCodeProducer.send("receive-code", "key", data);
+                    }
+                },
+                error -> {
+                    log.info("##error## {}", error);
+                },
+                () -> {
+                    log.info("##completed##");
+                }
+            );
     }
 }
