@@ -1,7 +1,7 @@
 # Diagram
 ![flow diagram svg](flow-diagram.svg "flow diagram")
 
-## flow request for new voucher code (starts from 0-8):
+## Flow request for new voucher code (starts from 0-8):
 (0): client requests to get new voucher code
 
 (1): Gateway pushes a message to kafka server
@@ -12,17 +12,23 @@
 
 (2): voucher integration service receives message request
 
-(3): send api request to Voucher Provider Server to get voucher code. (wating...?)
+(3): send api request to Voucher Provider Server (VPS) to get voucher code.
 
-(4): VPS response with a voucher code
+(4): VPS response with a message: "the request is being processed within 30 seconds".
 
-(5): calculate response time to specify how to send CODE back to client; push a message that it has the voucher code
+(4.1): VPS response with the voucher code within 30s.
 
-(6): Gateway receives CODE then (7) send it to client
+(4.2): VPS response with the voucher code after 30s.
 
-(8): voucher service receives CODE then persist it to DB
+(5.1): push a message that it has the voucher code and that it should be sent back via web.
 
-## flow customer requests to get all purchased code by phone number (starts from 10-15):
+(5.2): push a message that it has the voucher code and that it should be sent back via SMS.
+
+(6): Gateway receives CODE then (7) send it to web/SMS
+
+(8): in the meantime, voucher service receives CODE then persist it to DB
+
+## Flow customer requests to get all purchased code by phone number (starts from 10-15):
 (10): client request to get all purchased code by phone number
 
 (11): Gateway delegates the request to voucher-service

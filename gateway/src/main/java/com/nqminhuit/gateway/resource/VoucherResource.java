@@ -16,7 +16,7 @@ public class VoucherResource {
     @PostMapping("/voucher")
     ResponseEntity<String> requestVoucher() {
         kafkaProducer.send(Constants.TOPIC_REQUEST_CODE, "someone requests a voucher code!");
-        return ResponseEntity.ok("Your request is being processed within 30 seconds");
+        return ResponseEntity.ok("Your request is being processed...");
     }
 
 }
