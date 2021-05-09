@@ -70,3 +70,6 @@ $ docker-compose up -d
 ```
 
 # API testing
+```bash
+curl -X POST 'localhost:8080/voucher?phoneNumber=0909123456'
+```

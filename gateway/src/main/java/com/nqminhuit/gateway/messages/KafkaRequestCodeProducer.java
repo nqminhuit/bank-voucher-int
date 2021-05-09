@@ -14,7 +14,7 @@ public class KafkaRequestCodeProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void send(String topic, String key, String data) {
-        kafkaTemplate.send(topic, key, data);
+    public void send(String topic, String data) {
+        kafkaTemplate.send(topic, data);
     }
 }

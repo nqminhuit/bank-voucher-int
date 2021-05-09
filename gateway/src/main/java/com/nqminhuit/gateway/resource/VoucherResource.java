@@ -15,10 +15,9 @@ public class VoucherResource {
     private KafkaRequestCodeProducer kafkaProducer;
 
     @PostMapping("/voucher")
-    ResponseEntity<String> requestVoucher(@RequestParam("phoneNumber") String phoneNumber,
-        @RequestParam("callbackUrl") String callbackUrl) {
+    ResponseEntity<String> requestVoucher(@RequestParam("phoneNumber") String phoneNumber) {
 
-        kafkaProducer.send(Constants.TOPIC_REQUEST_CODE, phoneNumber, callbackUrl);
+        kafkaProducer.send(Constants.TOPIC_REQUEST_CODE, phoneNumber);
         return ResponseEntity.ok("Your request is being processed...");
     }
 
