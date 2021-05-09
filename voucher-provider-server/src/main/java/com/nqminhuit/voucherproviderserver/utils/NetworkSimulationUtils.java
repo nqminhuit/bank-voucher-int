@@ -10,7 +10,7 @@ public class NetworkSimulationUtils {
     private static Logger log = LoggerFactory.getLogger(NetworkSimulationUtils.class);
 
     // private static final List<Integer> NETWORK_TRAFFIC_DELAY_SEC_SIM = List.of(1, 2, 3, 10, 20, 30, 40, 50, 60);
-    private static final List<Integer> NETWORK_TRAFFIC_DELAY_SEC_SIM = List.of(1, 2, 3, 10);
+    private static final List<Integer> NETWORK_TRAFFIC_DELAY_SEC_SIM = List.of(1, 2, 3, 4);
 
     private static int trafficDelayInMillisecond() {
         Random rand = new Random();
