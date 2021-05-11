@@ -1,5 +1,6 @@
 package com.nqminhuit.voucherintservice.messages;
 
+import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
 import com.nqminhuit.voucherintservice.clients.VoucherProviderClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ public class KafkaRequestCodeConsumer {
     @Autowired
     private VoucherProviderClient vpsClient;
 
-    @KafkaListener(topics = "request-code", groupId = "req-group")
+    @KafkaListener(topics = KafkaTopicConstants.REQUEST_CODE, groupId = "req-group")
     public void listenToRequestCode(String message) {
         log.info("listen to request code message: {}", message);
         vpsClient.requestForVoucherCode();
