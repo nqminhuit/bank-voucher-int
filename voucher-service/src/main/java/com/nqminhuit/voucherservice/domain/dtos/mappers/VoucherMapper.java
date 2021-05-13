@@ -1,7 +1,7 @@
-package com.nqminhuit.voucherservice.mappers;
+package com.nqminhuit.voucherservice.domain.dtos.mappers;
 
 import com.nqminhuit.voucherservice.domain.Voucher;
-import com.nqminhuit.voucherservice.dtos.VoucherDto;
+import com.nqminhuit.voucherservice.domain.dtos.VoucherDto;
 import org.mapstruct.Mapper;
 import org.springframework.core.convert.converter.Converter;
 

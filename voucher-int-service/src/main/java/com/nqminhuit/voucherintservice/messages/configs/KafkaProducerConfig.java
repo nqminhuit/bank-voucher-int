@@ -1,4 +1,4 @@
-package com.nqminhuit.voucherintservice.configs;
+package com.nqminhuit.voucherintservice.messages.configs;
 
 import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
 import org.springframework.beans.factory.annotation.Value;

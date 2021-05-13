@@ -1,5 +1,6 @@
-package com.nqminhuit.gateway.configs;
+package com.nqminhuit.gateway.messages.configs;
 
+import com.nqminhuit.voucherShared.configs.BaseConfig;
 import com.nqminhuit.voucherShared.configs.CentralKafkaProducerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.nqminhuit.gateway.resource;
+package com.nqminhuit.gateway.rest;
 
 import com.nqminhuit.gateway.messages.KafkaRequestCodeProducer;
 import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;

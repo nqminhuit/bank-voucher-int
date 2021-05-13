@@ -1,4 +1,4 @@
-package com.nqminhuit.voucherservice.dtos;
+package com.nqminhuit.voucherservice.domain.dtos;
 
 import org.springframework.lang.NonNull;
 

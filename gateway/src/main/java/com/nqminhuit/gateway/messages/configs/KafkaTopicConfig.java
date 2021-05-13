@@ -1,4 +1,4 @@
-package com.nqminhuit.gateway.configs;
+package com.nqminhuit.gateway.messages.configs;
 
 import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
 import org.apache.kafka.clients.admin.NewTopic;

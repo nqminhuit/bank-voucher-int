@@ -15,7 +15,7 @@ public class KafkaReceiveCodeConsumer {
     @KafkaListener(
         topics = KafkaTopicConstants.RECEIVE_CODE,
         groupId = "rec-group",
-        containerFactory = "receiveCodeMsgListenerContainerFactory")
+        containerFactory = "receiveCodeMsgListenerContainerFactory") //com.nqminhuit.voucherShared.configs.BaseConfig
     public void listenToReceiveCode(ReceiveCodeMsg message) {
         log.info("listen to receive code message: {}", message);
     }

@@ -1,7 +1,7 @@
 package com.nqminhuit.voucherservice.services;
 
 import java.util.List;
-import com.nqminhuit.voucherservice.dtos.VoucherDto;
+import com.nqminhuit.voucherservice.domain.dtos.VoucherDto;
 
 public interface VoucherService {
 
