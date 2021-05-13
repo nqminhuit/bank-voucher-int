@@ -10,9 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaReceiveCodeConsumer {
 
-    Logger log = LoggerFactory.getLogger(KafkaReceiveCodeConsumer.class);
+    private static final Logger log = LoggerFactory.getLogger(KafkaReceiveCodeConsumer.class);
 
-    @KafkaListener(topics = KafkaTopicConstants.RECEIVE_CODE, groupId = "rec-group")
+    @KafkaListener(
+        topics = KafkaTopicConstants.RECEIVE_CODE,
+        groupId = "rec-group",
+        containerFactory = "receiveCodeMsgListenerContainerFactory")
     public void listenToReceiveCode(ReceiveCodeMsg message) {
         log.info("listen to receive code message: {}", message);
     }

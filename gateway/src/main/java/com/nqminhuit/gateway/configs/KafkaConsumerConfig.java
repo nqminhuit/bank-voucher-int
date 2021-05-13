@@ -1,10 +1,9 @@
 package com.nqminhuit.gateway.configs;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.nqminhuit.voucherShared.configs.CentralKafkaConsumerConfig;
 import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -15,12 +14,13 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 @Configuration
 public class KafkaConsumerConfig {
 
+    @Value(value = "${spring.kafka.bootstrap-servers}")
+    private String bootstrapServer;
+
     @Bean
     public ConsumerFactory<String, ReceiveCodeMsg> receiveCodeMsgConsumerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(
-            props,
+            CentralKafkaConsumerConfig.consumerConfigs(bootstrapServer),
             new StringDeserializer(),
             new JsonDeserializer<>(ReceiveCodeMsg.class));
     }
