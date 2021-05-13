@@ -1,6 +1,7 @@
 package com.nqminhuit.voucherintservice.clients;
 
 import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
+import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
 import com.nqminhuit.voucherintservice.messages.KafkaReceiveCodeProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class VoucherProviderClient {
                 data -> {
                     log.info("##new## data: {}", data);
                     if (data.startsWith("###code###")) {
-                        kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, "key", data);
+                        kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, new ReceiveCodeMsg("0909123456", data));
                     }
                 },
                 error -> {

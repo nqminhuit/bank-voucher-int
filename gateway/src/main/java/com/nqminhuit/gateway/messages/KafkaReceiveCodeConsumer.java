@@ -1,6 +1,7 @@
 package com.nqminhuit.gateway.messages;
 
-import com.nqminhuit.gateway.common.Constants;
+import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
+import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -11,8 +12,8 @@ public class KafkaReceiveCodeConsumer {
 
     Logger log = LoggerFactory.getLogger(KafkaReceiveCodeConsumer.class);
 
-    @KafkaListener(topics = Constants.TOPIC_RECEIVE_CODE, groupId = "rec-group")
-    public void listenToReceiveCode(String message) {
+    @KafkaListener(topics = KafkaTopicConstants.RECEIVE_CODE, groupId = "rec-group")
+    public void listenToReceiveCode(ReceiveCodeMsg message) {
         log.info("listen to receive code message: {}", message);
     }
 }

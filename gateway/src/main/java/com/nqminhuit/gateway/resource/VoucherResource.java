@@ -1,7 +1,7 @@
 package com.nqminhuit.gateway.resource;
 
-import com.nqminhuit.gateway.common.Constants;
 import com.nqminhuit.gateway.messages.KafkaRequestCodeProducer;
+import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +16,7 @@ public class VoucherResource {
 
     @PostMapping("/voucher")
     ResponseEntity<String> requestVoucher(@RequestParam("phoneNumber") String phoneNumber) {
-
-        kafkaProducer.send(Constants.TOPIC_REQUEST_CODE, phoneNumber);
+        kafkaProducer.send(KafkaTopicConstants.REQUEST_CODE, phoneNumber);
         return ResponseEntity.ok("Your request is being processed...");
     }
 
