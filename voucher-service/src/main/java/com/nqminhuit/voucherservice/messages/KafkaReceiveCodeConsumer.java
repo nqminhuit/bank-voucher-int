@@ -1,4 +1,4 @@
-package com.nqminhuit.gateway.messages;
+package com.nqminhuit.voucherservice.messages;
 
 import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
 import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
@@ -14,9 +14,10 @@ public class KafkaReceiveCodeConsumer {
 
     @KafkaListener(
         topics = KafkaTopicConstants.RECEIVE_CODE,
-        groupId = "rec-group-dspl",
+        groupId = "rec-group-db",
         containerFactory = KafkaTopicConstants.RECEIVE_CODE_LISTENER_CONTAINER_FACTORY)
-    public void listenToReceiveCode(ReceiveCodeMsg message) {
-        log.info("listen to receive code message: {}", message);
+    public void listenToReceiveCodeMsg(ReceiveCodeMsg msg) {
+        log.info("voucher-service also recive code msg: {}", msg);
     }
+
 }
