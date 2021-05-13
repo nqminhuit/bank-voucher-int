@@ -1,7 +1,6 @@
 package com.nqminhuit.gateway.configs;
 
 import com.nqminhuit.voucherShared.configs.CentralKafkaProducerConfig;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -9,10 +8,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 @Configuration
-public class KafkaProducerConfig {
-
-    @Value(value = "${spring.kafka.bootstrap-servers}")
-    private String bootstrapServer;
+public class KafkaProducerConfig extends BaseConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
