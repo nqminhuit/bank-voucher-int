@@ -17,4 +17,8 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="2" author="nqminhuit">
+        <createSequence sequenceName="seq_voucher_id" startValue="1" incrementBy="1" />
+    </changeSet>
+
 </databaseChangeLog>
