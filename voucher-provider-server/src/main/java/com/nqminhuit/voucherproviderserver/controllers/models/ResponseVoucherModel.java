@@ -2,6 +2,7 @@ package com.nqminhuit.voucherproviderserver.controllers.models;
 
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nqminhuit.voucherproviderserver.controllers.models.builders.ResponseVoucherModelBuilder;
 import com.nqminhuit.voucherproviderserver.services.enumerations.VoucherResponseStatus;
 
 public class ResponseVoucherModel implements Serializable {
@@ -23,6 +24,10 @@ public class ResponseVoucherModel implements Serializable {
 
     @JsonProperty
     private VoucherResponseStatus voucherResponseStatus;
+
+    public static ResponseVoucherModelBuilder builder() {
+        return new ResponseVoucherModelBuilder();
+    }
 
     public String getMessage() {
         return message;

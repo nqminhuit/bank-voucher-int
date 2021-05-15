@@ -10,14 +10,13 @@ public class NetworkSimulationUtils {
 
     private static Logger log = LoggerFactory.getLogger(NetworkSimulationUtils.class);
 
-    private static final List<Integer> NETWORK_TRAFFIC_DELAY_SEC_SIM = List.of(1, 2, 3, 4);
+    private static final List<Integer> NETWORK_TRAFFIC_DELAY_SEC_SIM = List.of(1, 2, 4, 5, 6);
 
     private static int trafficDelayInMillisecond() {
         Random rand = new Random();
         return NETWORK_TRAFFIC_DELAY_SEC_SIM.get(rand.nextInt(NETWORK_TRAFFIC_DELAY_SEC_SIM.size())) * 1000;
     }
 
-    // TODO: maybe randomly throw exception to simulate network failure?
     public static void delay() {
         int delay = trafficDelayInMillisecond();
         log.info("network traffic delays for {} milliseconds", delay);

@@ -1,9 +1,12 @@
 package com.nqminhuit.voucherproviderserver.services.impl;
 
+import java.util.concurrent.Future;
 import com.nqminhuit.voucherproviderserver.controllers.models.RequestVoucherModel;
 import com.nqminhuit.voucherproviderserver.controllers.models.ResponseVoucherModel;
 import com.nqminhuit.voucherproviderserver.services.VoucherService;
+import com.nqminhuit.voucherproviderserver.services.impl.constants.ClientTimer;
 import com.nqminhuit.voucherproviderserver.services.impl.threads.VoucherGeneratorThread;
+import com.nqminhuit.voucherproviderserver.utils.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,9 +20,21 @@ public class VoucherServiceImpl implements VoucherService {
     public ResponseVoucherModel generateVoucherCode(RequestVoucherModel req) {
         String phoneNumber = req.getPhoneNumber();
         log.info("generate voucher code for phoneNumber: {}", phoneNumber);
-        VoucherGeneratorThread voucherGeneratorThread = new VoucherGeneratorThread(phoneNumber);
-        voucherGeneratorThread.run();
-        return null;
+
+        long start = System.currentTimeMillis();
+        Future<ResponseVoucherModel> futureResponse =
+            VoucherGeneratorThread.generate(start, phoneNumber, req.getCallbackUrl());
+
+        while (!futureResponse.isDone()) {
+            if (System.currentTimeMillis() - start >= ClientTimer.MAX_CLIENT_WAIT_MILLIS) {
+                log.info("Timeout! Response pending message.");
+                return ResponseVoucherModel.builder().buildResponseTimeout();
+            }
+            ThreadUtils.safeSleep(1000);
+        }
+
+        log.info("Code is generated under 3s, return voucher code directly to client.");
+        return ResponseVoucherModel.builder().buildResponseFromFuture(futureResponse);
     }
 
 }

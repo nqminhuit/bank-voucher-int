@@ -6,14 +6,14 @@ import com.nqminhuit.voucherproviderserver.services.impl.constants.MessageRespon
 
 public class MessageResponseUtils {
 
-    public static String chooseMessage(long start, long current) {
-        return current - start <= ClientTimer.MAX_WEB_RESPONSE_MILLIS
+    public static String chooseMessage(long elapsedTimeMillis) {
+        return elapsedTimeMillis <= ClientTimer.MAX_WEB_RESPONSE_MILLIS
             ? MessageResponse.MSG_RESPONSE_CLIENT_SUCCESS
             : MessageResponse.MSG_RESPONSE_CLIENT_LATE_SUCCESS;
     }
 
-    public static VoucherResponseStatus chooseStatus(long start, long current) {
-        return current - start <= ClientTimer.MAX_WEB_RESPONSE_MILLIS
+    public static VoucherResponseStatus chooseStatus(long elapsedTimeMillis) {
+        return elapsedTimeMillis <= ClientTimer.MAX_WEB_RESPONSE_MILLIS
             ? VoucherResponseStatus.SUCCESS
             : VoucherResponseStatus.LATE_SUCCESS;
     }
