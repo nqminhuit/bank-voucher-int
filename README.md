@@ -63,6 +63,31 @@ Subscribes to receive-code topic, persists voucher code to DB when receives code
 Has:
 - 1 kafka **consumer** to **receive-code** topic
 
+## Security integration between Bank System and VPS
+- voucher-int-service request new voucher code for a phoneNumber, request including:
+    - callbackUrl: an exposed endpoint for VPS to call upon its late voucher generation response.
+    - phoneNumber: client phone number
+- VPS response as follow:
+    - if the traffic is low (within 3 seconds) return the voucher code right away.
+    - else, at 3 seconds mark, return an acknowledge response including:
+        - t(codeVerifier):
+        - transformMethod:
+        - message: "Your request is being processed within 30 seconds".
+    - return via callbackUrl:
+        - if traffic is extremely heavy (took more than 30 seconds) then return a late_success response including:
+            - codeVerifier
+            - message: "Thank you for your patience, your voucher code is ready."
+            - status: LATE_SUCCESS
+            - voucherCode
+        - else, response including:
+            - codeVerifier
+            - message: "Thank you for using our services, your voucher code is ready."
+            - status: SUCCESS
+            - voucherCode
+
+[base on Proofe Key for Code Exchange protocol flow of OAuth2](https://datatracker.ietf.org/doc/html/rfc7636#section-1.1)
+("client" is VPS, "Authz Server" is voucher-int-service in our use case)
+
 # Development
 start zookeeper and kafka servers:
 ```bash
@@ -70,6 +95,14 @@ $ docker-compose up -d
 ```
 
 # API testing
+client requests for new voucher code
 ```bash
 curl -X POST 'localhost:8080/voucher?phoneNumber=0909123456'
+```
+
+request to VPS server directly:
+```bash
+curl -X POST 'localhost:8081/api/request/voucher' \
+    -H 'content-type:application/json' \
+    -d '{"phoneNumber":"0909123456","callbackUrl":"http://localhost:8082/api/voucher-code/vps/response"}'
 ```
