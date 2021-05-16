@@ -43,8 +43,12 @@ public class KafkaRequestCodeConsumer {
             return;
         }
 
-        var voucherResponseStatus = responseModel.getVoucherResponseStatus();
-        if (voucherResponseStatus.equals(VoucherResponseStatus.SUCCESS)) { // TODO handle ERROR case
+        if (responseModel == null) {
+            log.error("Could not read JSON value from responseBody: {}", responseBody);
+            return;
+        }
+
+        if (VoucherResponseStatus.SUCCESS.equals(responseModel.getVoucherResponseStatus())) { // TODO handle ERROR case
             var msg = new ReceiveCodeMsg(responseModel.getPhoneNumber(), responseModel.getCode());
             log.info("sending to kafka receive code with message: {}", msg);
             kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
