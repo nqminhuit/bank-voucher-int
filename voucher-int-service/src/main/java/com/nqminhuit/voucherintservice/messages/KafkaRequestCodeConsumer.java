@@ -16,11 +16,16 @@ public class KafkaRequestCodeConsumer {
     @Autowired
     private VoucherProviderClient vpsClient;
 
+    @Autowired
+    private KafkaReceiveCodeProducer kafkaReceiveCodeProducer;
+
     @KafkaListener(topics = KafkaTopicConstants.REQUEST_CODE, groupId = "req-group")
     public void listenToRequestCode(String message) {
         log.info("listen to request code message: {}", message);
-        vpsClient.requestForVoucherCode();
-        log.info("done!!!");
+        var response = vpsClient.requestForVoucherCode();
+
+        log.info("code response: {}", response);
+        // kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
     }
 
 }
