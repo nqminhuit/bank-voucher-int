@@ -1,7 +1,7 @@
 # Diagram
 ![flow diagram svg](flow-diagram.svg "flow diagram")
 
-## Flow request for new voucher code (starts from 0-8):
+## Flow request for new voucher code (starts from 0-9):
 (0): client requests to get new voucher code
 
 (1.1): Gateway pushes a message to kafka server
@@ -18,9 +18,11 @@
 
 (5): upon receving voucher code, voucher int service pushes a message states that it has the voucher code.
 
-(6): Gateway receives the code then (7) send it to web/SMS base on message status.
+(6): Gateway receives the code then (7) get callbackUrl from Redis
 
-(8): in the meantime, when voucher service receives the code then persists to DB.
+(8): send it to web/SMS base on message status.
+
+(9): in the meantime, when voucher service receives the code then persists to DB.
 
 ## Flow customer requests to get all purchased code by phone number (starts from 10-15):
 (10): client request to get all purchased code by phone number
@@ -95,7 +97,7 @@ $ docker-compose up -d
 # API testing
 client requests for new voucher code
 ```bash
-curl -X POST 'localhost:8080/voucher?phoneNumber=0909123456'
+curl -X POST 'localhost:8080/voucher?phoneNumber=0909123456&callbackUrl=https://www.some-web.com/api/voucher-code/callback'
 ```
 
 request to VPS server directly: (for debuging purpose only)
