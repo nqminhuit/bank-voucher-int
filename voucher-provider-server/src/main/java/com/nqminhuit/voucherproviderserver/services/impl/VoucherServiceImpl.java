@@ -30,7 +30,7 @@ public class VoucherServiceImpl implements VoucherService {
                 return ResponseVoucherModel.builder()
                     .buildResponseTimeout(MessageResponse.MSG_RESPONSE_CLIENT_WAIT);
             }
-            ThreadUtils.safeSleep(1000);
+            ThreadUtils.safeSleep(500);
         }
 
         log.info("Code is generated under 3s, return voucher code directly to client.");

@@ -16,26 +16,42 @@ public class VoucherCodeClientCallback {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherCodeClientCallback.class);
 
-    public static void returnViaCallbackUrl(String callbackUrl, ResponseVoucherModel res)
-        throws IOException, InterruptedException {
-
-        log.info("Response data {} via callbackUrl {}", res, callbackUrl);
+    public static void returnViaCallbackUrl(String callbackUrl, ResponseVoucherModel res) {
+        var jsonBody = res.toJson();
+        log.info("Response data {} via callbackUrl {}, with body {}", res, callbackUrl, jsonBody);
         var postRequest = HttpRequest.newBuilder()
-            .POST(BodyPublishers.ofString(res.toJson()))
+            .POST(BodyPublishers.ofString(jsonBody))
             .uri(URI.create(callbackUrl))
             .setHeader("User-Agent", "Java 11 HttpClient Bot")
             .header("content-type", "application/json")
             .build();
 
-        log.info("before send request");
-        var response = HttpClient.newBuilder()
-            .version(Version.HTTP_1_1)
-            .connectTimeout(Duration.ofSeconds(5))
-            .build()
-            .send(postRequest, HttpResponse.BodyHandlers.ofString());
-        log.info("got response");
-        log.info("Response code: {}", response.statusCode());
-        log.info("Response body: {}", response.body());
+        HttpResponse<String> response;
+        try {
+            response = HttpClient.newBuilder()
+                .version(Version.HTTP_1_1)
+                .connectTimeout(Duration.ofSeconds(5))
+                .build()
+                .send(postRequest, HttpResponse.BodyHandlers.ofString());
+        }
+        catch (IOException | InterruptedException e) {
+            log.error("Exception happened: {}", e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
+        int responseCode = response.statusCode();
+        log.info("Response code: {}", responseCode);
+        if (isNotSuccessCode(responseCode)) {
+            log.error("Request sent failed: {}", response);
+        }
+        else {
+            log.info("Request sent successful: {}", response);
+        }
+    }
+
+    private static boolean isNotSuccessCode(int code) {
+        return code / 100 != 2;
     }
 
 }

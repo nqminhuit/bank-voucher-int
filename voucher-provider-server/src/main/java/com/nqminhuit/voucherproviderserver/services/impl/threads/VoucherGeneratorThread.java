@@ -27,6 +27,8 @@ public class VoucherGeneratorThread {
                 .phoneNumber(phoneNumber)
                 .message(MessageResponseUtils.chooseMessage(elapsedTimeMillis))
                 .voucherResponseStatus(MessageResponseUtils.chooseStatus(elapsedTimeMillis))
+                .codeVerifier("codeVerifier")
+                .transformMethod("transformMethod")
                 .build();
             log.info("Generated voucher code: {}", res);
 
