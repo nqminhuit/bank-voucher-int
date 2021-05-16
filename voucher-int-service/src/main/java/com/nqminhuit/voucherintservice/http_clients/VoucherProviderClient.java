@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nqminhuit.voucherintservice.http_clients.utils.HttpResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class VoucherProviderClient {
     public HttpResponse<String> requestForVoucherCode(String phoneNumber) {
         var postRequest = HttpRequest.newBuilder()
             .POST(BodyPublishers.ofString(bodyRequest(phoneNumber)))
-            .uri(URI.create(this.voucherServerProviderUrl + "/api/request/voucher"))
+            .uri(URI.create("http://" + this.voucherServerProviderUrl + "/api/request/voucher"))
             .setHeader("user-agent", "Java 11 HttpClient Bot")
             .header("content-type", "application/json")
             .build();
@@ -62,9 +63,8 @@ public class VoucherProviderClient {
         }
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            return null;
+            return HttpResponseUtils.response("Exception happened: " + e.getMessage(), 500);
         }
-
     }
 
     private String bodyRequest(String phoneNumber) {

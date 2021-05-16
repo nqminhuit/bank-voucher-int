@@ -6,6 +6,7 @@ import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
 import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
 import com.nqminhuit.voucherintservice.http_clients.VoucherProviderClient;
 import com.voucher.provider.models.ResponseVoucherModel;
+import com.voucher.provider.models.enumerations.VoucherResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +31,24 @@ public class KafkaRequestCodeConsumer {
     public void listenToRequestCode(String phoneNumber) throws IllegalArgumentException {
         validatePhoneNumber(phoneNumber);
 
-        var response = vpsClient.requestForVoucherCode(phoneNumber);
-        log.info("code response: {} from request for phoneNumber: {}", response, phoneNumber);
+        var responseBody = vpsClient.requestForVoucherCode(phoneNumber).body(); // cant be null
+        log.info("code response: {} from request for phoneNumber: {}", responseBody, phoneNumber);
 
         ResponseVoucherModel responseModel;
         try {
-            responseModel = jsonMapper.readValue(response.body(), ResponseVoucherModel.class);
+            responseModel = jsonMapper.readValue(responseBody, ResponseVoucherModel.class);
         }
         catch (JsonProcessingException e) {
             e.printStackTrace();
             return;
         }
-        var msg = new ReceiveCodeMsg(responseModel.getPhoneNumber(), responseModel.getCode());
-        log.info("sending to kafka receive code with message: {}", msg);
-        kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
+
+        var voucherResponseStatus = responseModel.getVoucherResponseStatus();
+        if (voucherResponseStatus.equals(VoucherResponseStatus.SUCCESS)) { // TODO handle ERROR case
+            var msg = new ReceiveCodeMsg(responseModel.getPhoneNumber(), responseModel.getCode());
+            log.info("sending to kafka receive code with message: {}", msg);
+            kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
+        }
     }
 
     private void validatePhoneNumber(String phoneNumber) throws IllegalArgumentException {
