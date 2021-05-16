@@ -1,7 +1,7 @@
 package com.nqminhuit.voucherproviderserver.services;
 
 import com.nqminhuit.voucherproviderserver.controllers.models.RequestVoucherModel;
-import com.nqminhuit.voucherproviderserver.controllers.models.ResponseVoucherModel;
+import com.voucher.provider.models.ResponseVoucherModel;
 
 public interface VoucherService {
 

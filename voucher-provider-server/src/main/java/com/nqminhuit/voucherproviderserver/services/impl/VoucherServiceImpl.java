@@ -1,12 +1,12 @@
 package com.nqminhuit.voucherproviderserver.services.impl;
 
-import java.util.concurrent.Future;
 import com.nqminhuit.voucherproviderserver.controllers.models.RequestVoucherModel;
-import com.nqminhuit.voucherproviderserver.controllers.models.ResponseVoucherModel;
 import com.nqminhuit.voucherproviderserver.services.VoucherService;
 import com.nqminhuit.voucherproviderserver.services.impl.constants.ClientTimer;
+import com.nqminhuit.voucherproviderserver.services.impl.constants.MessageResponse;
 import com.nqminhuit.voucherproviderserver.services.impl.threads.VoucherGeneratorThread;
 import com.nqminhuit.voucherproviderserver.utils.ThreadUtils;
+import com.voucher.provider.models.ResponseVoucherModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,17 +18,17 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public ResponseVoucherModel generateVoucherCode(RequestVoucherModel req) {
-        String phoneNumber = req.getPhoneNumber();
+        var phoneNumber = req.getPhoneNumber();
         log.info("generate voucher code for phoneNumber: {}", phoneNumber);
 
-        long start = System.currentTimeMillis();
-        Future<ResponseVoucherModel> futureResponse =
-            VoucherGeneratorThread.generate(start, phoneNumber, req.getCallbackUrl());
+        var start = System.currentTimeMillis();
+        var futureResponse = VoucherGeneratorThread.generate(start, phoneNumber, req.getCallbackUrl());
 
         while (!futureResponse.isDone()) {
             if (System.currentTimeMillis() - start >= ClientTimer.MAX_CLIENT_WAIT_MILLIS) {
                 log.info("Timeout! Response pending message.");
-                return ResponseVoucherModel.builder().buildResponseTimeout();
+                return ResponseVoucherModel.builder()
+                    .buildResponseTimeout(MessageResponse.MSG_RESPONSE_CLIENT_WAIT);
             }
             ThreadUtils.safeSleep(1000);
         }

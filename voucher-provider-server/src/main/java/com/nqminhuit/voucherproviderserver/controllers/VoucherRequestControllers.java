@@ -1,8 +1,8 @@
 package com.nqminhuit.voucherproviderserver.controllers;
 
 import com.nqminhuit.voucherproviderserver.controllers.models.RequestVoucherModel;
-import com.nqminhuit.voucherproviderserver.controllers.models.ResponseVoucherModel;
 import com.nqminhuit.voucherproviderserver.services.VoucherService;
+import com.voucher.provider.models.ResponseVoucherModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

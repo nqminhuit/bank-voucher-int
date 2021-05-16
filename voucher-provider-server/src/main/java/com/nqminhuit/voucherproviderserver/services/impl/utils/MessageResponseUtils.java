@@ -1,8 +1,8 @@
 package com.nqminhuit.voucherproviderserver.services.impl.utils;
 
-import com.nqminhuit.voucherproviderserver.services.enumerations.VoucherResponseStatus;
 import com.nqminhuit.voucherproviderserver.services.impl.constants.ClientTimer;
 import com.nqminhuit.voucherproviderserver.services.impl.constants.MessageResponse;
+import com.voucher.provider.models.enumerations.VoucherResponseStatus;
 
 public class MessageResponseUtils {
 

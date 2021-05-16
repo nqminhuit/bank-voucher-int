@@ -2,13 +2,13 @@ package com.nqminhuit.voucherproviderserver.services.impl.threads;
 
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import com.nqminhuit.voucherproviderserver.controllers.models.ResponseVoucherModel;
+import com.nqminhuit.voucherproviderserver.http_client.VoucherCodeClientCallback;
 import com.nqminhuit.voucherproviderserver.services.impl.constants.ClientTimer;
 import com.nqminhuit.voucherproviderserver.services.impl.utils.MessageResponseUtils;
 import com.nqminhuit.voucherproviderserver.utils.NetworkSimulationUtils;
+import com.voucher.provider.models.ResponseVoucherModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +21,8 @@ public class VoucherGeneratorThread {
 
         Callable<ResponseVoucherModel> responseVoucherCode = () -> {
             NetworkSimulationUtils.delay();
-            long elapsedTimeMillis = System.currentTimeMillis() - startTimeMillis;
-            ResponseVoucherModel res = ResponseVoucherModel.builder()
+            var elapsedTimeMillis = System.currentTimeMillis() - startTimeMillis;
+            var res = ResponseVoucherModel.builder()
                 .code(UUID.randomUUID().toString())
                 .phoneNumber(phoneNumber)
                 .message(MessageResponseUtils.chooseMessage(elapsedTimeMillis))
@@ -31,15 +31,15 @@ public class VoucherGeneratorThread {
             log.info("Generated voucher code: {}", res);
 
             if (elapsedTimeMillis > ClientTimer.MAX_CLIENT_WAIT_MILLIS) {
-                log.info("Response via callbackUrl");
+                VoucherCodeClientCallback.returnViaCallbackUrl(callbackUrl, res);
                 return null;
             }
             return res;
         };
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<ResponseVoucherModel> futureResponse = executor.submit(responseVoucherCode);
-        executor.shutdown(); // TODO: should we shutdown it or leave it for other upcomming request?
+        var executor = Executors.newSingleThreadExecutor();
+        var futureResponse = executor.submit(responseVoucherCode);
+        executor.shutdown(); // TODO: should we shutdown it or leave it for upcomming requests?
         return futureResponse;
     }
 
