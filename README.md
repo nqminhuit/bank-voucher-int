@@ -89,6 +89,10 @@ Has:
 ("client" is VPS, "Authz Server" is voucher-int-service in our use case)
 
 # Development
+## Project dependencies
+// TODO
+
+## Setup
 start zookeeper and kafka servers:
 ```bash
 $ docker-compose up -d
