@@ -1,11 +1,10 @@
 package com.nqminhuit.voucherintservice.messages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
 import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
-import com.nqminhuit.voucherintservice.clients.VoucherProviderClient;
+import com.nqminhuit.voucherintservice.http_clients.VoucherProviderClient;
 import com.voucher.provider.models.ResponseVoucherModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +27,30 @@ public class KafkaRequestCodeConsumer {
     private ObjectMapper jsonMapper;
 
     @KafkaListener(topics = KafkaTopicConstants.REQUEST_CODE, groupId = "req-group")
-    public void listenToRequestCode(String message) throws JsonMappingException, JsonProcessingException {
-        var response = vpsClient.requestForVoucherCode();
-        log.info("code response: {} from request message {}", response, message);
+    public void listenToRequestCode(String phoneNumber) throws IllegalArgumentException {
+        validatePhoneNumber(phoneNumber);
 
-        var responseModel = jsonMapper.readValue(response.body(), ResponseVoucherModel.class);
+        var response = vpsClient.requestForVoucherCode(phoneNumber);
+        log.info("code response: {} from request for phoneNumber: {}", response, phoneNumber);
+
+        ResponseVoucherModel responseModel;
+        try {
+            responseModel = jsonMapper.readValue(response.body(), ResponseVoucherModel.class);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return;
+        }
         var msg = new ReceiveCodeMsg(responseModel.getPhoneNumber(), responseModel.getCode());
         log.info("sending to kafka receive code with message: {}", msg);
         kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
+    }
+
+    private void validatePhoneNumber(String phoneNumber) throws IllegalArgumentException {
+        if (phoneNumber.isEmpty()) {
+            throw new IllegalArgumentException("phoneNumber must not be empty");
+        }
+        // TODO implement more cases
     }
 
 }

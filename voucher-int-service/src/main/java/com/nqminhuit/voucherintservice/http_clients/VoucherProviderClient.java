@@ -1,4 +1,4 @@
-package com.nqminhuit.voucherintservice.clients;
+package com.nqminhuit.voucherintservice.http_clients;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,10 +21,31 @@ public class VoucherProviderClient {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherProviderClient.class);
 
-    public HttpResponse<String> requestForVoucherCode() {
+    private String voucherServerProviderUrl;
+
+    private Long serverPort;
+
+    private String serverHostname;
+
+    @Value("${voucher-int-service.voucher-provider-url}")
+    public void setVoucherServerProviderUrl(String url) {
+        this.voucherServerProviderUrl = url;
+    }
+
+    @Value("${server.port}")
+    public void setServerPort(Long port) {
+        this.serverPort = port;
+    }
+
+    @Value("${server.hostName}")
+    public void setServerHostname(String hostname) {
+        this.serverHostname = hostname;
+    }
+
+    public HttpResponse<String> requestForVoucherCode(String phoneNumber) {
         var postRequest = HttpRequest.newBuilder()
-            .POST(BodyPublishers.ofString(bodyRequest()))
-            .uri(URI.create("http://localhost:8081/api/request/voucher"))
+            .POST(BodyPublishers.ofString(bodyRequest(phoneNumber)))
+            .uri(URI.create(this.voucherServerProviderUrl + "/api/request/voucher"))
             .setHeader("user-agent", "Java 11 HttpClient Bot")
             .header("content-type", "application/json")
             .build();
@@ -45,11 +67,12 @@ public class VoucherProviderClient {
 
     }
 
-    private String bodyRequest() {
+    private String bodyRequest(String phoneNumber) {
         try {
             return new ObjectMapper().writeValueAsString(Map.ofEntries(
-                Map.entry("phoneNumber", "0908123456"),
-                Map.entry("callbackUrl", URI.create("http://localhost:8082/api/voucher-code/vps/response"))));
+                Map.entry("phoneNumber", phoneNumber),
+                Map.entry("callbackUrl", URI.create(
+                    "http://" + serverHostname + ":" + serverPort + "/api/voucher-code/vps/response"))));
         }
         catch (JsonProcessingException e) {
             e.printStackTrace();

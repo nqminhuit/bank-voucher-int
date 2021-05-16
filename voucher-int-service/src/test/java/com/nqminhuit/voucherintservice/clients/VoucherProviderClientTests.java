@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nqminhuit.voucherintservice.http_clients.VoucherProviderClient;
 import com.voucher.provider.models.ResponseVoucherModel;
 import com.voucher.provider.models.enumerations.VoucherResponseStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,7 @@ public class VoucherProviderClientTests {
 
     @Test
     public void requestForVoucherCode() throws IOException, InterruptedException {
-        var response = client.requestForVoucherCode();
+        var response = client.requestForVoucherCode("0909123456");
 
         assertEquals(200, response.statusCode());
         var res = jsonMapper.readValue(response.body(), ResponseVoucherModel.class);
