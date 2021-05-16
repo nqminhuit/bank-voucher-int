@@ -90,7 +90,7 @@ Has:
 
 # Development
 ## Project dependencies
-// TODO
+![services-dependency-graph svg](services-dependency-graph.svg "services dependency graph")
 
 ## Setup
 start zookeeper and kafka servers:
