@@ -13,7 +13,8 @@ public class KafkaProducerConfig extends BaseConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
-        return new DefaultKafkaProducerFactory<>(CentralKafkaProducerConfig.producerConfigs(bootstrapServer));
+        return new DefaultKafkaProducerFactory<>(
+            CentralKafkaProducerConfig.stringProducerConfigs(bootstrapServer));
     }
 
     @Bean

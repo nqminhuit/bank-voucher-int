@@ -1,14 +1,15 @@
 package com.nqminhuit.voucherproviderserver.services.impl;
 
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import com.nqminhuit.voucherproviderserver.controllers.models.RequestVoucherModel;
 import com.nqminhuit.voucherproviderserver.services.VoucherService;
-import com.nqminhuit.voucherproviderserver.utils.NetworkSimulationUtils;
+import com.nqminhuit.voucherproviderserver.services.impl.constants.ClientTimer;
+import com.nqminhuit.voucherproviderserver.services.impl.constants.MessageResponse;
+import com.nqminhuit.voucherproviderserver.services.impl.threads.VoucherGeneratorThread;
+import com.nqminhuit.voucherproviderserver.utils.ThreadUtils;
+import com.voucher.provider.models.ResponseVoucherModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 @Component
 public class VoucherServiceImpl implements VoucherService {
@@ -16,20 +17,24 @@ public class VoucherServiceImpl implements VoucherService {
     private static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
 
     @Override
-    public Mono<String> generateVoucherCode() {
-        log.info("generate voucher code ...");
+    public ResponseVoucherModel generateVoucherCode(RequestVoucherModel req) {
+        var phoneNumber = req.getPhoneNumber();
+        log.info("generate voucher code for phoneNumber: {}", phoneNumber);
 
-        CompletableFuture<String> cf =
-            CompletableFuture.supplyAsync(() -> {
-                String code = UUID.randomUUID().toString();
-                log.info("should return code: {}", code);
-                NetworkSimulationUtils.delay();
-                log.info("traffic cleared, returning code {}", code);
-                return "###code### " + code;
-            })
-            .completeOnTimeout("the request is being processed within 30 seconds", 2, TimeUnit.SECONDS);
+        var start = System.currentTimeMillis();
+        var futureResponse = VoucherGeneratorThread.generate(start, phoneNumber, req.getCallbackUrl());
 
-        return Mono.fromFuture(cf);
+        while (!futureResponse.isDone()) {
+            if (System.currentTimeMillis() - start >= ClientTimer.MAX_CLIENT_WAIT_MILLIS) {
+                log.info("Timeout! Response pending message.");
+                return ResponseVoucherModel.builder()
+                    .buildResponseTimeout(MessageResponse.MSG_RESPONSE_CLIENT_WAIT);
+            }
+            ThreadUtils.safeSleep(500);
+        }
+
+        log.info("Code is generated under 3s, return voucher code directly to client.");
+        return ResponseVoucherModel.builder().buildResponseFromFuture(futureResponse);
     }
 
 }

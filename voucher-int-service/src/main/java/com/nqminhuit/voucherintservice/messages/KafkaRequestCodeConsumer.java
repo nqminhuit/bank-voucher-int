@@ -1,7 +1,12 @@
 package com.nqminhuit.voucherintservice.messages;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
-import com.nqminhuit.voucherintservice.clients.VoucherProviderClient;
+import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
+import com.nqminhuit.voucherintservice.http_clients.VoucherProviderClient;
+import com.voucher.provider.models.ResponseVoucherModel;
+import com.voucher.provider.models.enumerations.VoucherResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +21,45 @@ public class KafkaRequestCodeConsumer {
     @Autowired
     private VoucherProviderClient vpsClient;
 
+    @Autowired
+    private KafkaReceiveCodeProducer kafkaReceiveCodeProducer;
+
+    @Autowired
+    private ObjectMapper jsonMapper;
+
     @KafkaListener(topics = KafkaTopicConstants.REQUEST_CODE, groupId = "req-group")
-    public void listenToRequestCode(String message) {
-        log.info("listen to request code message: {}", message);
-        vpsClient.requestForVoucherCode();
-        log.info("done!!!");
+    public void listenToRequestCode(String phoneNumber) throws IllegalArgumentException {
+        validatePhoneNumber(phoneNumber);
+
+        var responseBody = vpsClient.requestForVoucherCode(phoneNumber).body(); // cant be null
+        log.info("code response: {} from request for phoneNumber: {}", responseBody, phoneNumber);
+
+        ResponseVoucherModel responseModel;
+        try {
+            responseModel = jsonMapper.readValue(responseBody, ResponseVoucherModel.class);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        if (responseModel == null) {
+            log.error("Could not read JSON value from responseBody: {}", responseBody);
+            return;
+        }
+
+        if (VoucherResponseStatus.SUCCESS.equals(responseModel.getVoucherResponseStatus())) { // TODO handle ERROR case
+            var msg = new ReceiveCodeMsg(responseModel.getPhoneNumber(), responseModel.getCode());
+            log.info("sending to kafka receive code with message: {}", msg);
+            kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
+        }
+    }
+
+    private void validatePhoneNumber(String phoneNumber) throws IllegalArgumentException {
+        if (phoneNumber.isEmpty()) {
+            throw new IllegalArgumentException("phoneNumber must not be empty");
+        }
+        // TODO implement more cases
     }
 
 }

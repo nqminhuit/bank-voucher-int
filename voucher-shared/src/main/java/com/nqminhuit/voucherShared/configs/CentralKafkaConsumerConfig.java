@@ -1,6 +1,5 @@
 package com.nqminhuit.voucherShared.configs;
 
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -8,11 +7,10 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 public class CentralKafkaConsumerConfig {
 
-    public static Map<String, Object> consumerConfigs(String bootstrapServer) {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        return props;
+    public static Map<String, Object> jsonConsumerConfigs(String bootstrapServer) {
+        return Map.ofEntries(
+            Map.entry(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer),
+            Map.entry(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class),
+            Map.entry(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class));
     }
 }

@@ -17,7 +17,8 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, ReceiveCodeMsg> receiveCodeMsgProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(CentralKafkaProducerConfig.producerConfigs(bootstrapServer));
+        return new DefaultKafkaProducerFactory<>(
+            CentralKafkaProducerConfig.jsonProducerConfigs(bootstrapServer));
     }
 
     @Bean

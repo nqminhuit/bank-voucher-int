@@ -16,7 +16,7 @@ public abstract class BaseConfig {
 
     protected ConsumerFactory<String, ReceiveCodeMsg> receiveCodeMsgConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
-            CentralKafkaConsumerConfig.consumerConfigs(bootstrapServer),
+            CentralKafkaConsumerConfig.jsonConsumerConfigs(bootstrapServer),
             new StringDeserializer(),
             new JsonDeserializer<>(ReceiveCodeMsg.class));
     }
