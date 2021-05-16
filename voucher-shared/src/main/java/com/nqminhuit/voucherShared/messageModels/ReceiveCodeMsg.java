@@ -8,11 +8,14 @@ public class ReceiveCodeMsg implements Serializable {
 
     private String voucherCode;
 
+    private String status;
+
     public ReceiveCodeMsg() {}
 
-    public ReceiveCodeMsg(String phoneNumber, String voucherCode) {
+    public ReceiveCodeMsg(String phoneNumber, String voucherCode, String status) {
         this.phoneNumber = phoneNumber;
         this.voucherCode = voucherCode;
+        this.status = status;
     }
 
     public String getPhoneNumber() {
@@ -31,9 +34,18 @@ public class ReceiveCodeMsg implements Serializable {
         this.voucherCode = voucherCode;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "\"ReceiveCodeMsg\": {\"phoneNumber\": \"" + phoneNumber + "\", \"voucherCode\": \""
-            + voucherCode + "\"}";
+        return "\"ReceiveCodeMsg\": {\"phoneNumber\": \"" + phoneNumber + "\", \"status\": \"" + status
+            + "\", \"voucherCode\": \"" + voucherCode + "\"}";
     }
+
 }

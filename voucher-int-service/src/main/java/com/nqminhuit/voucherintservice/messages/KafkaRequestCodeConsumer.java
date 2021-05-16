@@ -48,8 +48,10 @@ public class KafkaRequestCodeConsumer {
             return;
         }
 
-        if (VoucherResponseStatus.SUCCESS.equals(responseModel.getVoucherResponseStatus())) { // TODO handle ERROR case
-            var msg = new ReceiveCodeMsg(responseModel.getPhoneNumber(), responseModel.getCode());
+        VoucherResponseStatus codeStatus = responseModel.getVoucherResponseStatus();
+        if (VoucherResponseStatus.SUCCESS.equals(codeStatus)) { // TODO handle ERROR case
+            var msg = new ReceiveCodeMsg(
+                responseModel.getPhoneNumber(), responseModel.getCode(), codeStatus.name());
             log.info("sending to kafka receive code with message: {}", msg);
             kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
         }
