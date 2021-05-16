@@ -28,11 +28,10 @@ public class VoucherCodeResponseController {
 
         // TODO impl security check for integrity data
 
-        VoucherResponseStatus voucherResponseStatus = body.getVoucherResponseStatus();
-        if (VoucherResponseStatus.SUCCESS.equals(voucherResponseStatus) ||
-            VoucherResponseStatus.LATE_SUCCESS.equals(voucherResponseStatus)) {
-
-            var msg = new ReceiveCodeMsg(body.getPhoneNumber(), body.getCode());
+        VoucherResponseStatus status = body.getVoucherResponseStatus();
+        if (VoucherResponseStatus.SUCCESS.equals(status)
+            || VoucherResponseStatus.LATE_SUCCESS.equals(status)) {
+            var msg = new ReceiveCodeMsg(body.getPhoneNumber(), body.getCode(), status.name());
             log.info("sending to kafka receive code with message: {}", msg);
             kafkaReceiveCodeProducer.send(KafkaTopicConstants.RECEIVE_CODE, msg);
         }

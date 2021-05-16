@@ -5,13 +5,18 @@ import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
 import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 
 @Component
 public class KafkaReceiveCodeConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaReceiveCodeConsumer.class);
+
+    @Autowired
+    private Jedis jedis;
 
     @KafkaListener(
         topics = KafkaTopicConstants.RECEIVE_CODE,
@@ -24,7 +29,8 @@ public class KafkaReceiveCodeConsumer {
             log.error("'status' field is missing!");
             return;
         }
-        ReturnCodeMethodFactory.getMethod(codeStatus).returnVoucherCode(message.getVoucherCode());
-        // TODO return msg to client via callback url
+        String callbackUrl = jedis.get(message.getPhoneNumber());
+        ReturnCodeMethodFactory.getMethod(codeStatus)
+            .returnVoucherCode(message.getVoucherCode(), callbackUrl);
     }
 }
