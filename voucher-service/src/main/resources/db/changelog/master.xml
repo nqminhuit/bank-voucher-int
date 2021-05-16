@@ -21,4 +21,13 @@
         <createSequence sequenceName="seq_voucher_id" startValue="1" incrementBy="1" />
     </changeSet>
 
+    <changeSet id="3-add-missing-audit-fields-to-voucher-table" author="nqminhuit">
+        <addColumn tableName="voucher">
+            <column name="created_date" type="timestamp" />
+            <column name="created_by" type="varchar(255)" />
+            <column name="last_modified_date" type="timestamp" />
+            <column name="last_modified_by" type="varchar(255)" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
