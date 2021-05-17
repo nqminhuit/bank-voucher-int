@@ -24,6 +24,8 @@ public class VoucherProviderClient {
 
     private String voucherServerProviderUrl;
 
+    private String requestProtocol;
+
     private Long serverPort;
 
     private String serverHostname;
@@ -31,6 +33,11 @@ public class VoucherProviderClient {
     @Value("${voucher-int-service.voucher-provider-url}")
     public void setVoucherServerProviderUrl(String url) {
         this.voucherServerProviderUrl = url;
+    }
+
+    @Value("${voucher-int-service.request.protocol}")
+    public void setRequestProtocol(String protocol) {
+        this.requestProtocol = protocol;
     }
 
     @Value("${server.port}")
@@ -46,7 +53,7 @@ public class VoucherProviderClient {
     public HttpResponse<String> requestForVoucherCode(String phoneNumber) {
         var postRequest = HttpRequest.newBuilder()
             .POST(BodyPublishers.ofString(bodyRequest(phoneNumber)))
-            .uri(URI.create("http://" + this.voucherServerProviderUrl + "/api/request/voucher"))
+            .uri(URI.create(requestProtocol + "://" + this.voucherServerProviderUrl + "/api/request/voucher"))
             .setHeader("user-agent", "Java 11 HttpClient Bot")
             .header("content-type", "application/json")
             .build();
