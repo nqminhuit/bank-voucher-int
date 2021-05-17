@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
 
 @RestController
-public class VoucherControllers {
+public class VoucherController {
 
-    private static final Logger log = LoggerFactory.getLogger(VoucherControllers.class);
+    private static final Logger log = LoggerFactory.getLogger(VoucherController.class);
 
     @Value("${bank-voucher-int.gateway.redisTtlSeconds}")
     private Long redisRecordTtl;
