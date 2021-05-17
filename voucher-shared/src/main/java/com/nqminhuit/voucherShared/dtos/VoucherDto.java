@@ -1,5 +1,6 @@
-package com.nqminhuit.voucherservice.domain.dtos;
+package com.nqminhuit.voucherShared.dtos;
 
+import com.nqminhuit.voucherShared.dtos.builders.VoucherDtoBuilder;
 import org.springframework.lang.NonNull;
 
 public class VoucherDto {
@@ -11,6 +12,10 @@ public class VoucherDto {
 
     @NonNull
     private String voucherCode;
+
+    public static VoucherDtoBuilder builder() {
+        return new VoucherDtoBuilder();
+    }
 
     public Long getId() {
         return id;

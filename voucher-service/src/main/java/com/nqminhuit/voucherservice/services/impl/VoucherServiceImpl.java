@@ -2,8 +2,8 @@ package com.nqminhuit.voucherservice.services.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import com.nqminhuit.voucherservice.domain.dtos.VoucherDto;
-import com.nqminhuit.voucherservice.domain.dtos.mappers.VoucherMapper;
+import com.nqminhuit.voucherShared.dtos.VoucherDto;
+import com.nqminhuit.voucherservice.domain.mappers.VoucherMapper;
 import com.nqminhuit.voucherservice.repositories.VoucherRepository;
 import com.nqminhuit.voucherservice.services.VoucherService;
 import org.slf4j.Logger;
@@ -24,8 +24,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public List<VoucherDto> findAllVouchersByPhoneNumber(String phoneNumber) {
-        return voucherRepository.findAllByPhoneNumber(phoneNumber)
-            .stream()
+        return voucherRepository.findAllByPhoneNumber(phoneNumber).stream()
             .map(voucherMapper::toDto)
             .collect(Collectors.toList());
     }

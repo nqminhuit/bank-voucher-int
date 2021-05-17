@@ -1,8 +1,8 @@
 package com.nqminhuit.voucherservice.messages;
 
 import com.nqminhuit.voucherShared.constants.KafkaTopicConstants;
+import com.nqminhuit.voucherShared.dtos.VoucherDto;
 import com.nqminhuit.voucherShared.messageModels.ReceiveCodeMsg;
-import com.nqminhuit.voucherservice.domain.dtos.VoucherDto;
 import com.nqminhuit.voucherservice.services.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +24,10 @@ public class KafkaReceiveCodeConsumer {
         containerFactory = KafkaTopicConstants.RECEIVE_CODE_LISTENER_CONTAINER_FACTORY)
     public void listenToReceiveCodeMsg(ReceiveCodeMsg msg) {
         log.info("voucher-service recives code msg: {}", msg);
-        VoucherDto voucher = new VoucherDto();
-        voucher.setPhoneNumber(msg.getPhoneNumber());
-        voucher.setVoucherCode(msg.getVoucherCode());
-        voucherService.insertNewVoucher(voucher);
+        voucherService.insertNewVoucher(VoucherDto.builder()
+            .phoneNumber(msg.getPhoneNumber())
+            .voucherCode(msg.getVoucherCode())
+            .build());
     }
 
 }

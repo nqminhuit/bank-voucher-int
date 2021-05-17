@@ -1,7 +1,7 @@
 package com.nqminhuit.voucherservice.mappers;
 
+import com.nqminhuit.voucherShared.dtos.VoucherDto;
 import com.nqminhuit.voucherservice.domain.Voucher;
-import com.nqminhuit.voucherservice.domain.dtos.VoucherDto;
 import org.mapstruct.Mapper;
 
 @Mapper
