@@ -1,16 +1,17 @@
 package com.nqminhuit.voucherShared.dtos;
 
+import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 import com.nqminhuit.voucherShared.dtos.builders.VoucherDtoBuilder;
-import org.springframework.lang.NonNull;
 
-public class VoucherDto {
+public class VoucherDto implements Serializable {
 
     private Long id;
 
-    @NonNull
+    @NotBlank
     private String phoneNumber;
 
-    @NonNull
+    @NotBlank
     private String voucherCode;
 
     public static VoucherDtoBuilder builder() {

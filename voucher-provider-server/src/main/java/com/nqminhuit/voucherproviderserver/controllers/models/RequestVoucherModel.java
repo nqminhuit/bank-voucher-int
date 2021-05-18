@@ -1,16 +1,16 @@
 package com.nqminhuit.voucherproviderserver.controllers.models;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.lang.NonNull;
 
 public class RequestVoucherModel implements Serializable {
 
-    @NonNull
+    @NotBlank
     @JsonProperty
     private String phoneNumber;
 
-    @NonNull
+    @NotBlank
     @JsonProperty
     private String callbackUrl;
 

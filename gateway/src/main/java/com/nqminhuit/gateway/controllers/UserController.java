@@ -1,12 +1,12 @@
 package com.nqminhuit.gateway.controllers;
 
+import javax.validation.Valid;
 import com.nqminhuit.gateway.controllers.models.UserRequestModel;
 import com.nqminhuit.gateway.domain.dtos.BankUserDto;
 import com.nqminhuit.gateway.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +22,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/sign-up")
-    String signUpUser(@Validated @RequestBody UserRequestModel body) {
+    String signUpUser(@Valid @RequestBody UserRequestModel body) {
         log.info("Received request to sign up user with data: {}", body);
-        userService.createUser(new BankUserDto(body.getUsername(), body.getPassword(), body.getPhoneNumber()));
+        userService.createUser(new BankUserDto(
+            body.getUsername(),
+            body.getPassword(),
+            body.getPhoneNumber()));
         return "received signup request with data: " + body;
     }
 

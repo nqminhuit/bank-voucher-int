@@ -1,20 +1,21 @@
 package com.nqminhuit.gateway.controllers.models;
 
+import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.lang.NonNull;
 
-public class UserRequestModel {
+public class UserRequestModel implements Serializable {
 
     @JsonProperty
-    @NonNull
+    @NotBlank
     private String username;
 
     @JsonProperty
-    @NonNull
+    @NotBlank
     private String phoneNumber;
 
     @JsonProperty
-    @NonNull
+    @NotBlank
     private String password;
 
     public String getUsername() {
