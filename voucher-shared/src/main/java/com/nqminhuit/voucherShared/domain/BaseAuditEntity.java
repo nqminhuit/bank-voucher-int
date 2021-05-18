@@ -1,4 +1,4 @@
-package com.nqminhuit.voucherservice.domain;
+package com.nqminhuit.voucherShared.domain;
 
 import java.util.Date;
 import javax.persistence.EntityListeners;

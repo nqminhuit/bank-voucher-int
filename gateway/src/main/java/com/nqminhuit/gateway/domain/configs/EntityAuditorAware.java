@@ -1,4 +1,4 @@
-package com.nqminhuit.voucherservice.domain.auditor;
+package com.nqminhuit.gateway.domain.configs;
 
 import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;

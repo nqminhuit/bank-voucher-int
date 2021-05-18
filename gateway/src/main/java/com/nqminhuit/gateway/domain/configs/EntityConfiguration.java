@@ -1,4 +1,4 @@
-package com.nqminhuit.voucherservice.domain.configs;
+package com.nqminhuit.gateway.domain.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

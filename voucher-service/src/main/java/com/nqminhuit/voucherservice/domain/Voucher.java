@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import com.nqminhuit.voucherShared.domain.BaseAuditEntity;
 
 @Entity
 public class Voucher extends BaseAuditEntity {

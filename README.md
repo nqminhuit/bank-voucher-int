@@ -27,12 +27,13 @@
 ## Flow customer requests to get all purchased code by phone number (starts from 10-15):
 (10): client request to get all purchased code by phone number
 
-(11): Gateway delegates the request to voucher-service
+(11): Gateway delegates the request to voucher-service (*)
 
 (12): voucher-service handle request then response result to Gateway
 
 (13): Gateway response result to Client
 
+(*): Gateway will also handle authentication check at step (11), if authentication success, it will delegate request. Usually there should be a microservice for this task, however, its tasks are only for sign-up and check authentication, quite small for this assignment, so no need for new service.
 
 # Implementation
 Kafka topics:
@@ -60,6 +61,7 @@ Has:
 - 1 kafka **consumer** to **receive-code** topic
 
 ## Security integration between Bank System and VPS
+(TODO: implementation)
 - voucher-int-service request new voucher code for a phoneNumber, request including:
     - callbackUrl: an exposed endpoint for VPS to call upon its late voucher generation response.
     - phoneNumber: client phone number
