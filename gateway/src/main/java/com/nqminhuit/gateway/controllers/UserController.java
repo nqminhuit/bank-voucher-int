@@ -1,7 +1,9 @@
 package com.nqminhuit.gateway.controllers;
 
 import javax.validation.Valid;
-import com.nqminhuit.gateway.controllers.models.UserRequestModel;
+import com.nqminhuit.gateway.controllers.models.AuthResponseModel;
+import com.nqminhuit.gateway.controllers.models.UserSignInRequestModel;
+import com.nqminhuit.gateway.controllers.models.UserSignUpRequestModel;
 import com.nqminhuit.gateway.domain.dtos.BankUserDto;
 import com.nqminhuit.gateway.services.UserService;
 import org.slf4j.Logger;
@@ -22,13 +24,22 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/sign-up")
-    String signUpUser(@Valid @RequestBody UserRequestModel body) {
+    String signUpUser(@Valid @RequestBody UserSignUpRequestModel body) {
         log.info("Received request to sign up user with data: {}", body);
-        userService.createUser(new BankUserDto(
-            body.getUsername(),
-            body.getPassword(),
-            body.getPhoneNumber()));
+        BankUserDto dto = convert(body);
+        dto.setPhoneNumber(body.getPhoneNumber());
+        userService.createUser(dto);
         return "received signup request with data: " + body;
+    }
+
+    @PostMapping("/sign-in")
+    AuthResponseModel signInUser(@Valid @RequestBody UserSignInRequestModel body) {
+        log.info("Received request to sign in user with data: {}", body);
+        return userService.authenticate(convert(body));
+    }
+
+    private BankUserDto convert(UserSignInRequestModel body) {
+        return new BankUserDto(body.getUsername(), body.getPassword());
     }
 
 }

@@ -1,5 +1,7 @@
 package com.nqminhuit.gateway.services.impl;
 
+import com.nqminhuit.gateway.controllers.models.AuthResponseModel;
+import com.nqminhuit.gateway.domain.BankUser;
 import com.nqminhuit.gateway.domain.dtos.BankUserDto;
 import com.nqminhuit.gateway.domain.mappers.UserMapper;
 import com.nqminhuit.gateway.repositories.UserRepository;
@@ -26,6 +28,18 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, hashedDto);
         hashedDto.setPassword(hashedPassword);
         return hashedDto;
+    }
+
+    @Override
+    public AuthResponseModel authenticate(BankUserDto userDto) {
+        BankUser user = userRepository.findByUsername(userDto.getUsername());
+        if (user == null) {
+            return new AuthResponseModel("Username does not exits", false);
+        }
+        if (BCrypt.checkpw(userDto.getPassword(), user.getPassword())) {
+            return new AuthResponseModel("Success!", true);
+        }
+        return new AuthResponseModel("Invalid username or password!", false);
     }
 
 }

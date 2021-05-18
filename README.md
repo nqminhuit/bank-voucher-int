@@ -115,3 +115,10 @@ curl -X POST 'localhost:8080/user/sign-up' \
     -H 'content-type:application/json' \
     -d '{"username":"batman","phoneNumber":"0909123456","password":"batpass"}'
 ```
+
+sample request for user to sign in:
+```bash
+curl -X POST 'localhost:8080/user/sign-in' \
+    -H 'content-type:application/json' \
+    -d '{"username":"batman","password":"batpass"}'
+```

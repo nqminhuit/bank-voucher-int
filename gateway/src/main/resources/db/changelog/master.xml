@@ -25,4 +25,8 @@
     <changeSet id="create-user-id-sequence" author="nqminhuit">
         <createSequence sequenceName="seq_user_id" startValue="1" incrementBy="1" />
     </changeSet>
+
+    <changeSet id="add-unique-constraint-to-bank-user-username" author="nqminhuit">
+        <addUniqueConstraint tableName="bank_user" columnNames="username" constraintName="unq_user_username"/>
+    </changeSet>
 </databaseChangeLog>

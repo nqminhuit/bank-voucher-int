@@ -16,7 +16,7 @@ public class BankUser extends BaseAuditEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)

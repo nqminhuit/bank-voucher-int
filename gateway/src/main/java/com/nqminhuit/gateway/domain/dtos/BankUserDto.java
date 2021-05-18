@@ -12,6 +12,11 @@ public class BankUserDto {
 
     public BankUserDto() {};
 
+    public BankUserDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public BankUserDto(String username, String password, String phoneNumber) {
         this.username = username;
         this.password = password;

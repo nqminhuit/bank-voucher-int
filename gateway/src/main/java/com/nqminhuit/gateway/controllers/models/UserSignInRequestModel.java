@@ -4,15 +4,11 @@ import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UserRequestModel implements Serializable {
+public class UserSignInRequestModel implements Serializable {
 
     @JsonProperty
     @NotBlank
     private String username;
-
-    @JsonProperty
-    @NotBlank
-    private String phoneNumber;
 
     @JsonProperty
     @NotBlank
@@ -26,14 +22,6 @@ public class UserRequestModel implements Serializable {
         this.username = username;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -44,8 +32,8 @@ public class UserRequestModel implements Serializable {
 
     @Override
     public String toString() {
-        return "\"UserRequestModel\": {\"password\": \"" + password + "\", \"phoneNumber\": \"" + phoneNumber
-            + "\", \"username\": \"" + username + "\"}";
+        return "\"UserSignInRequestModel\": {\"password\": \"" + password + "\", \"username\": \"" + username
+            + "\"}";
     }
 
 }
