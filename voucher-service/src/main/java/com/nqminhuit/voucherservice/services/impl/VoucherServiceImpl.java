@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
@@ -30,6 +31,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
+    @Transactional
     public void insertNewVoucher(VoucherDto voucherDto) {
         log.info("handle request to insert new voucher: {}", voucherDto);
         voucherRepository.save(voucherMapper.toEntity(voucherDto));
