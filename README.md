@@ -2,11 +2,13 @@
 ![flow diagram svg](flow-diagram.svg "flow diagram")
 
 ## Flow request for new voucher code (starts from 0-9):
-(0): client requests to get new voucher code
+(0): client requests to get new voucher code (along with callbackUrl)
 
-(1.1): Gateway pushes a message to kafka server
+(1.1): Gateway stores callbackUrl of this client request to Redis
 
-(1.2): response to client that message is being processed within 30s
+(1.2): Gateway pushes a message to kafka server
+
+(1.3): Gateway responses to client that message is being processed within 30s
 
 (2): voucher integration service receives message request
 
@@ -18,11 +20,9 @@
 
 (5): upon receving voucher code, voucher int service pushes a message states that it has the voucher code.
 
-(6): Gateway receives the code then (7) get callbackUrl from Redis
+(6): Gateway receives the code then (7) get callbackUrl from Redis and (8) send it to web/SMS base on message status.
 
-(8): send it to web/SMS base on message status.
-
-(9): in the meantime, when voucher service receives the code then persists to DB.
+(9): in the meantime, when voucher service receives the code, it persists to DB.
 
 ## Flow customer requests to get all purchased code by phone number (starts from 10-15):
 (10): client request to get all purchased code by phone number
@@ -33,7 +33,7 @@
 
 (13): Gateway response result to Client
 
-(*): Gateway will also handle authentication check at step (11), if authentication success, it will delegate request. Usually there should be a microservice for this task, however, its tasks are only for sign-up and check authentication, quite small for this assignment, so no need for new service.
+(*): Gateway will also handle authentication check at step (11) before deleggation, if authentication success, it will delegate request. Usually there should be a microservice for this task, however, its tasks are only for sign-up and check authentication, quite small for this assignment, so no need for new service.
 
 # Implementation
 Kafka topics:
@@ -61,7 +61,7 @@ Has:
 - 1 kafka **consumer** to **receive-code** topic
 
 ## Security integration between Bank System and VPS
-(TODO: implementation)
+(TODO: improvement implementation)
 - voucher-int-service request new voucher code for a phoneNumber, request including:
     - callbackUrl: an exposed endpoint for VPS to call upon its late voucher generation response.
     - phoneNumber: client phone number
@@ -97,14 +97,21 @@ $ docker-compose up -d
 ```
 
 # API testing
-client requests for new voucher code
+sample client requests for new voucher code
 ```bash
 curl -X POST 'localhost:8080/voucher?phoneNumber=0909123456&callbackUrl=https://www.some-web.com/api/voucher-code/callback'
 ```
 
-request to VPS server directly: (for debuging purpose only)
+sample request to VPS server directly: (for debuging purpose only)
 ```bash
 curl -X POST 'localhost:8081/api/request/voucher' \
     -H 'content-type:application/json' \
     -d '{"phoneNumber":"0909123456","callbackUrl":"http://localhost:8082/api/voucher-code/vps/response"}'
+```
+
+sample request to sign new user up:
+```bash
+curl -X POST 'localhost:8080/user/sign-up' \
+    -H 'content-type:application/json' \
+    -d '{"username":"batman","phoneNumber":"0909123456","password":"batpass"}'
 ```
