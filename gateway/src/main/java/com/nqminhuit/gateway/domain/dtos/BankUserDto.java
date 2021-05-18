@@ -1,37 +1,22 @@
-package com.nqminhuit.gateway.domain;
+package com.nqminhuit.gateway.domain.dtos;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import com.nqminhuit.voucherShared.domain.BaseAuditEntity;
+public class BankUserDto {
 
-@Entity
-public class User extends BaseAuditEntity {
-
-    @Id
-    @SequenceGenerator(name = "seq_user_id", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user_id")
     private Long id;
 
-    @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    public User(Long id, String username, String password, String phoneNumber) {
+    public BankUserDto() {};
+
+    public BankUserDto(String username, String password, String phoneNumber) {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
     }
-
-    public User() {}
 
     public Long getId() {
         return id;
@@ -67,7 +52,7 @@ public class User extends BaseAuditEntity {
 
     @Override
     public String toString() {
-        return "\"User\": {\"id\": \"" + id + "\", \"password\": \"" + password + "\", \"phoneNumber\": \""
+        return "\"UserDto\": {\"id\": \"" + id + "\", \"password\": \"" + password + "\", \"phoneNumber\": \""
             + phoneNumber + "\", \"username\": \"" + username + "\"}";
     }
 

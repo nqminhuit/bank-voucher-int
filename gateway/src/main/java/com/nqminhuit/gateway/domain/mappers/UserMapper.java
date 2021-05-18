@@ -1,12 +1,12 @@
 package com.nqminhuit.gateway.domain.mappers;
 
-import com.nqminhuit.gateway.domain.User;
-import com.nqminhuit.gateway.domain.dtos.UserDto;
+import com.nqminhuit.gateway.domain.BankUser;
+import com.nqminhuit.gateway.domain.dtos.BankUserDto;
 
 public class UserMapper {
 
-    public User toEntity(UserDto dto) {
-        return new User(dto.getId(), dto.getUsername(), dto.getPassword(), dto.getPhoneNumber());
+    public static BankUser toEntity(BankUserDto dto) {
+        return new BankUser(dto.getId(), dto.getUsername(), dto.getPassword(), dto.getPhoneNumber());
     }
 
 }

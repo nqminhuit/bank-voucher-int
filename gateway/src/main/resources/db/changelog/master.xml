@@ -1,10 +1,8 @@
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create-user-table" author="nqminhuit">
-        <createTable tableName="user">
+    <changeSet id="create-bank-user-table" author="nqminhuit">
+        <createTable tableName="bank_user">
             <column name="id" type="Bigint">
                 <constraints primaryKey="true" nullable="false" />
             </column>

@@ -1,7 +1,7 @@
 package com.nqminhuit.gateway.controllers;
 
 import com.nqminhuit.gateway.controllers.models.UserRequestModel;
-import com.nqminhuit.gateway.domain.dtos.UserDto;
+import com.nqminhuit.gateway.domain.dtos.BankUserDto;
 import com.nqminhuit.gateway.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping("/sign-up")
     String signUpUser(@Validated @RequestBody UserRequestModel body) {
         log.info("Received request to sign up user with data: {}", body);
-        userService.createUser(new UserDto(body.getUsername(), body.getPassword(), body.getPhoneNumber()));
+        userService.createUser(new BankUserDto(body.getUsername(), body.getPassword(), body.getPhoneNumber()));
         return "received signup request with data: " + body;
     }
 

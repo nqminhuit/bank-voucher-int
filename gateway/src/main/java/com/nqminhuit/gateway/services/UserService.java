@@ -1,9 +1,9 @@
 package com.nqminhuit.gateway.services;
 
-import com.nqminhuit.gateway.domain.dtos.UserDto;
+import com.nqminhuit.gateway.domain.dtos.BankUserDto;
 
 public interface UserService {
 
-    void createUser(UserDto user);
+    void createUser(BankUserDto user);
 
 }

@@ -1,8 +1,8 @@
 package com.nqminhuit.gateway.repositories;
 
-import com.nqminhuit.gateway.domain.User;
+import com.nqminhuit.gateway.domain.BankUser;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<BankUser, Long> {
 
 }
