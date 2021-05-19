@@ -9,6 +9,7 @@ import com.nqminhuit.gateway.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,12 @@ public class UserController {
         log.info("Received request to sign up user with data: {}", body);
         BankUserDto dto = convert(body);
         dto.setPhoneNumber(body.getPhoneNumber());
-        userService.createUser(dto);
+        try {
+            userService.createUser(dto);
+        }
+        catch (DataIntegrityViolationException e) {
+            return "This username has already existed!";
+        }
         return "received signup request with data: " + body;
     }
 
