@@ -100,6 +100,20 @@ Bootstrap infrastructure services: zookeeper, kafka, postgres and redis:
 $ docker-compose up -d
 ```
 
+To start up services:
+Must install share projects first because it produces common code that other projects are using:
+```bash
+$ (cd voucher-provider-shared; mvn clean install); (cd voucher-shared; mvn clean install);
+```
+Open 4 terminals and start each project independently:
+```bash
+$ cd voucher-service; mvn;
+$ cd gateway; mvn;
+$ cd voucher-provider-server; mvn;
+$ cd voucher-int-service; mvn;
+```
+There will be improvement using docker compose.
+
 # API testing
 sample client requests for new voucher code
 ```bash
