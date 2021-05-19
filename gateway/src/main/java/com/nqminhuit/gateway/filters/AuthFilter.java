@@ -8,7 +8,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.nqminhuit.gateway.filters.services.AuthCheck;
+import com.nqminhuit.gateway.filters.services.GatewayAuthentication;
 import org.springframework.http.HttpStatus;
 
 public class AuthFilter implements Filter {
@@ -26,7 +26,7 @@ public class AuthFilter implements Filter {
         }
 
         String jwt = authz.replaceFirst("Bearer", "").trim();
-        if (!AuthCheck.verify(jwt)) {
+        if (!GatewayAuthentication.verify(jwt)) {
             res.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid access token!");
             return;
         }

@@ -122,3 +122,8 @@ curl -X POST 'localhost:8080/user/sign-in' \
     -H 'content-type:application/json' \
     -d '{"username":"batman","password":"batpass"}'
 ```
+
+sample request to get all vouchers:
+```bash
+curl -X GET 'localhost:8080/voucher/0909123456' -H 'authorization: abcdef'
+```

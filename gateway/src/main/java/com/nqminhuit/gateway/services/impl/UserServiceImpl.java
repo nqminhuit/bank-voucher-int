@@ -4,6 +4,7 @@ import com.nqminhuit.gateway.controllers.models.AuthResponseModel;
 import com.nqminhuit.gateway.domain.BankUser;
 import com.nqminhuit.gateway.domain.dtos.BankUserDto;
 import com.nqminhuit.gateway.domain.mappers.UserMapper;
+import com.nqminhuit.gateway.filters.services.GatewayAuthentication;
 import com.nqminhuit.gateway.repositories.UserRepository;
 import com.nqminhuit.gateway.services.UserService;
 import org.mindrot.jbcrypt.BCrypt;
@@ -39,7 +40,9 @@ public class UserServiceImpl implements UserService {
             return new AuthResponseModel("Username does not exits", false);
         }
         if (BCrypt.checkpw(userDto.getPassword(), user.getPassword())) {
-            return new AuthResponseModel("Success!", true);
+            String jwt =
+                GatewayAuthentication.generateJwt(user.getUsername(), user.getPhoneNumber());
+            return new AuthResponseModel("Success!", true, jwt);
         }
         return new AuthResponseModel("Invalid username or password!", false);
     }
