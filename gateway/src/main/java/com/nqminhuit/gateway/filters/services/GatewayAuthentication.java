@@ -14,10 +14,11 @@ public class GatewayAuthentication {
     // FIXME: find a way to inject secret to the class AuthFilter
     private static String jwtSecret = "f049586d-6d8d-45c5-92e5-0bd5ce32854b";
 
-    public static boolean verify(String jwt) {
+    public static boolean verify(String jwt, String phoneNumber) {
         try {
             JWT.require(Algorithm.HMAC256(jwtSecret))
                 .withIssuer(ISSUER)
+                .withClaim("phoneNumber", phoneNumber)
                 .build()
                 .verify(jwt);
             return true;

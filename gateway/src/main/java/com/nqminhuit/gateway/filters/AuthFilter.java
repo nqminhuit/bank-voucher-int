@@ -26,7 +26,8 @@ public class AuthFilter implements Filter {
         }
 
         String jwt = authz.replaceFirst("Bearer", "").trim();
-        if (!GatewayAuthentication.verify(jwt)) {
+        String phoneNumber = req.getParameter("phoneNumber");
+        if (!GatewayAuthentication.verify(jwt, phoneNumber)) {
             res.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid access token!");
             return;
         }

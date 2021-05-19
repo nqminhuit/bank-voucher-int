@@ -5,6 +5,7 @@ import com.nqminhuit.gateway.controllers.models.AuthResponseModel;
 import com.nqminhuit.gateway.controllers.models.UserSignInRequestModel;
 import com.nqminhuit.gateway.controllers.models.UserSignUpRequestModel;
 import com.nqminhuit.gateway.domain.dtos.BankUserDto;
+import com.nqminhuit.gateway.filters.services.GatewayAuthentication;
 import com.nqminhuit.gateway.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/sign-up")
-    String signUpUser(@Valid @RequestBody UserSignUpRequestModel body) {
+    AuthResponseModel signUpUser(@Valid @RequestBody UserSignUpRequestModel body) {
         log.info("Received request to sign up user with data: {}", body);
         BankUserDto dto = convert(body);
         dto.setPhoneNumber(body.getPhoneNumber());
@@ -33,9 +34,10 @@ public class UserController {
             userService.createUser(dto);
         }
         catch (DataIntegrityViolationException e) {
-            return "This username has already existed!";
+            return new AuthResponseModel("This username has already existed!", false);
         }
-        return "received signup request with data: " + body;
+        String jwt = GatewayAuthentication.generateJwt(dto.getUsername(), dto.getPhoneNumber());
+        return new AuthResponseModel("Account created!", true, jwt);
     }
 
     @PostMapping("/sign-in")

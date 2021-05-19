@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,8 +41,8 @@ public class VoucherController {
         return ResponseEntity.ok("Your request is being processed...");
     }
 
-    @GetMapping("/voucher/{phoneNumber}")
-    List<VoucherDto> getAllVoucherCodes(@PathVariable String phoneNumber) {
+    @GetMapping("/voucher")
+    List<VoucherDto> getAllVoucherCodes(@RequestParam("phoneNumber") String phoneNumber) {
         log.info("Receives request to get all voucher code by phoneNumber '{}'", phoneNumber);
         var vouchers = voucherServiceClient.findAllVouchersByPhoneNumber(phoneNumber);
         log.info("Receives result: {}", vouchers);

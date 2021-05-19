@@ -25,6 +25,8 @@
 (9): in the meantime, when voucher service receives the code, it persists to DB.
 
 ## Flow customer requests to get all purchased code by phone number (starts from 10-15):
+note: user needs to sign-in (if does not have account then sign-up) first to get the access token (jwt form) and then include this access token in their request header on protected resouces.
+
 (10): client request to get all purchased code by phone number
 
 (11): Gateway delegates the request to voucher-service (*)
@@ -41,11 +43,12 @@ Kafka topics:
 - receive-code
 
 ## Gateway:
-Acts as a backend frontline, receives all requests from Client and delegates request to coresponding service.
+Acts as a backend frontline, receives all requests from Client and delegates request to coresponding service. Also acts as an authorization server.
 
 Has:
 - 1 kafka **producer** to **request-code** topic
 - 1 kafka **consumer** to **receive-code** topic
+- communication to kafka, redis, postgres and voucher-service
 
 ## Voucher integration service:
 Subscribes to request-code topic, requests to 3rd party Voucher Provider Server, handle voucher code response from VPS then publish to receive-code topic.
@@ -59,6 +62,7 @@ Subscribes to receive-code topic, persists voucher code to DB when receives code
 
 Has:
 - 1 kafka **consumer** to **receive-code** topic
+- handle gateway request to get purchased voucher codes.
 
 ## Security integration between Bank System and VPS
 (TODO: improvement implementation)
@@ -91,7 +95,7 @@ Has:
 ![services-dependency-graph svg](services-dependency-graph.svg "services dependency graph")
 
 ## Setup
-start zookeeper and kafka servers:
+Bootstrap infrastructure services: zookeeper, kafka, postgres and redis:
 ```bash
 $ docker-compose up -d
 ```
@@ -125,5 +129,5 @@ curl -X POST 'localhost:8080/user/sign-in' \
 
 sample request to get all vouchers:
 ```bash
-curl -X GET 'localhost:8080/voucher/0909123456' -H 'authorization: abcdef'
+curl -X GET 'localhost:8080/voucher?phoneNumber=0909123456' -H 'authorization: <jwt_value_when_sign_in>'
 ```
