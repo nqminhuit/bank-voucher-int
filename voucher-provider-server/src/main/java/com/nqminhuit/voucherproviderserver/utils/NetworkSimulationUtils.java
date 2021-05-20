@@ -1,6 +1,5 @@
 package com.nqminhuit.voucherproviderserver.utils;
 
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
@@ -10,11 +9,10 @@ public class NetworkSimulationUtils {
 
     private static Logger log = LoggerFactory.getLogger(NetworkSimulationUtils.class);
 
-    private static final List<Integer> NETWORK_TRAFFIC_DELAY_SEC_SIM = List.of(1, 2, 4, 5, 6);
+    private static final Random rand = new Random();
 
     private static int trafficDelayInMillisecond() {
-        Random rand = new Random();
-        return NETWORK_TRAFFIC_DELAY_SEC_SIM.get(rand.nextInt(NETWORK_TRAFFIC_DELAY_SEC_SIM.size())) * 1000;
+        return (rand.nextInt(118) + 3) * 1000;
     }
 
     public static void delay() {

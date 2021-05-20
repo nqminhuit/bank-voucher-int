@@ -21,28 +21,35 @@ public class VoucherGeneratorThread {
 
         Callable<ResponseVoucherModel> responseVoucherCode = () -> {
             NetworkSimulationUtils.delay();
-            var elapsedTimeMillis = System.currentTimeMillis() - startTimeMillis;
-            var res = ResponseVoucherModel.builder()
-                .code(UUID.randomUUID().toString())
-                .phoneNumber(phoneNumber)
-                .message(MessageResponseUtils.chooseMessage(elapsedTimeMillis))
-                .voucherResponseStatus(MessageResponseUtils.chooseStatus(elapsedTimeMillis))
-                .codeVerifier("codeVerifier")
-                .transformMethod("transformMethod")
-                .build();
-            log.info("Generated voucher code: {}", res);
-
-            if (elapsedTimeMillis > ClientTimer.MAX_CLIENT_WAIT_MILLIS) {
-                VoucherCodeClientCallback.returnViaCallbackUrl(callbackUrl, res);
-                return null;
-            }
-            return res;
+            return generateResponseVoucherModel(startTimeMillis, phoneNumber, callbackUrl);
         };
 
         var executor = Executors.newSingleThreadExecutor();
         var futureResponse = executor.submit(responseVoucherCode);
         executor.shutdown(); // TODO: should we shutdown it or leave it for upcomming requests?
         return futureResponse;
+    }
+
+    // expose public for testable, TODO: may find other way
+    public static ResponseVoucherModel generateResponseVoucherModel(
+        long startTimeMillis, String phoneNumber, String callbackUrl) {
+
+        var elapsedTimeMillis = System.currentTimeMillis() - startTimeMillis;
+        var res = ResponseVoucherModel.builder()
+            .code(UUID.randomUUID().toString())
+            .phoneNumber(phoneNumber)
+            .message(MessageResponseUtils.chooseMessage(elapsedTimeMillis))
+            .voucherResponseStatus(MessageResponseUtils.chooseStatus(elapsedTimeMillis))
+            .codeVerifier("codeVerifier")
+            .transformMethod("transformMethod")
+            .build();
+        log.info("Generated voucher code: {}", res);
+
+        if (elapsedTimeMillis > ClientTimer.MAX_CLIENT_WAIT_MILLIS) {
+            VoucherCodeClientCallback.returnViaCallbackUrl(callbackUrl, res);
+            return null;
+        }
+        return res;
     }
 
 }
