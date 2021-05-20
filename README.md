@@ -38,7 +38,7 @@ note: user needs to sign-in (if does not have account then sign-up) first to get
 (*): Gateway will also handle authentication check at step (11) before deleggation, if authentication success, it will delegate request. Usually there should be a microservice for this task, however, its tasks are only for sign-up and check authentication, quite small for this assignment, so no need for new service.
 
 # Implementation
-Kafka topics:
+## Kafka topics:
 - request-code
 - receive-code
 
@@ -87,25 +87,25 @@ Has:
             - status: SUCCESS
             - voucherCode
 
-[base on Proofe Key for Code Exchange protocol flow of OAuth2](https://datatracker.ietf.org/doc/html/rfc7636#section-1.1)
+[base on Proof Key for Code Exchange protocol flow of OAuth2](https://datatracker.ietf.org/doc/html/rfc7636#section-1.1)
 ("client" is VPS, "Authz Server" is voucher-int-service in our use case)
 
 # Development
-## Project dependencies
+## Service dependencies
 ![services-dependency-graph svg](services-dependency-graph.svg "services dependency graph")
 
 ## Setup
-Bootstrap infrastructure services: zookeeper, kafka, postgres and redis:
+Bootstrap infrastructure services: zookeeper, kafka, postgres and redis, using docker compose:
 ```bash
 $ docker-compose up -d
 ```
 
-To start up services:
-Must install share projects first because it produces common code that other projects are using:
+To start up services, must install shared services first because it produces common code that other services are using:
 ```bash
+# one line command:
 $ (cd voucher-provider-shared; mvn clean install); (cd voucher-shared; mvn clean install);
 ```
-Open 4 terminals and start each project independently:
+Open 4 terminal shells and start each service independently:
 ```bash
 $ cd voucher-service; mvn;
 $ cd gateway; mvn;
@@ -115,33 +115,35 @@ $ cd voucher-int-service; mvn;
 There will be improvement using docker compose.
 
 # API testing
-sample client requests for new voucher code
-```bash
-curl -X POST 'localhost:8080/voucher?phoneNumber=0909123456&callbackUrl=https://www.some-web.com/api/voucher-code/callback'
-```
-
-sample request to VPS server directly: (for debuging purpose only)
-```bash
-curl -X POST 'localhost:8081/api/request/voucher' \
-    -H 'content-type:application/json' \
-    -d '{"phoneNumber":"0909123456","callbackUrl":"http://localhost:8082/api/voucher-code/vps/response"}'
-```
-
-sample request to sign new user up:
+First, sign up a new user:
 ```bash
 curl -X POST 'localhost:8080/user/sign-up' \
     -H 'content-type:application/json' \
     -d '{"username":"batman","phoneNumber":"0909123456","password":"batpass"}'
 ```
 
-sample request for user to sign in:
+Then, use jwt to requests for new voucher code
+```bash
+curl -X POST 'localhost:8080/voucher?phoneNumber=0909123456&callbackUrl=https://www.some-web.com/api/voucher-code/callback' \
+    -H 'authorization: <jwt_value_responsed_when_sign_up>'
+```
+
+Next, If user has been inactive for more than 10mins, the access token will be expired and user has to sign in again:
 ```bash
 curl -X POST 'localhost:8080/user/sign-in' \
     -H 'content-type:application/json' \
     -d '{"username":"batman","password":"batpass"}'
 ```
 
-sample request to get all vouchers:
+Finally, use the jwt token to request to get all vouchers:
 ```bash
-curl -X GET 'localhost:8080/voucher?phoneNumber=0909123456' -H 'authorization: <jwt_value_when_sign_in>'
+curl -X GET 'localhost:8080/voucher?phoneNumber=0909123456' \
+    -H 'authorization: <jwt_value_when_sign_in>'
+```
+
+Sample request to VPS server directly: (for debuging purpose only)
+```bash
+curl -X POST 'localhost:8081/api/request/voucher' \
+    -H 'content-type:application/json' \
+    -d '{"phoneNumber":"0909123456","callbackUrl":"http://localhost:8082/api/voucher-code/vps/response"}'
 ```
