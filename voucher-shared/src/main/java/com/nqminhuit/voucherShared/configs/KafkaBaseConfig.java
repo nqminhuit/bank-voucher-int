@@ -9,12 +9,12 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-public abstract class BaseConfig {
+public abstract class KafkaBaseConfig {
 
     @Value(value = "${spring.kafka.bootstrap-servers}")
     protected String bootstrapServer;
 
-    protected ConsumerFactory<String, ReceiveCodeMsg> receiveCodeMsgConsumerFactory() {
+    private ConsumerFactory<String, ReceiveCodeMsg> receiveCodeMsgConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
             CentralKafkaConsumerConfig.jsonConsumerConfigs(bootstrapServer),
             new StringDeserializer(),
@@ -23,8 +23,7 @@ public abstract class BaseConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ReceiveCodeMsg> receiveCodeMsgListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ReceiveCodeMsg> factory =
-            new ConcurrentKafkaListenerContainerFactory<>();
+        var factory = new ConcurrentKafkaListenerContainerFactory<String, ReceiveCodeMsg>();
         factory.setConsumerFactory(receiveCodeMsgConsumerFactory());
         return factory;
     }
