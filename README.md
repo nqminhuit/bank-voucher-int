@@ -147,3 +147,24 @@ curl -X POST 'localhost:8081/api/request/voucher' \
     -H 'content-type:application/json' \
     -d '{"phoneNumber":"0909123456","callbackUrl":"http://localhost:8082/api/voucher-code/vps/response"}'
 ```
+
+To see what data store inside postgres db:
+```bash
+$ docker exec -it postgres psql -U postgres bank_voucher_int
+
+psql> \dt list all tables
+psql> select * from voucher;
+psql> select * from bank_user;
+```
+
+# Automation testing
+Go to each project and execute these commands:
+```bash
+$ mvn clean test
+```
+
+To see code coverage:
+```bash
+$ mvn jacoco:report # need file jacoco.exec, generated at $ mvn test
+# test coverage is generated at: target/site/jacoco/index.html
+```

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class VoucherControllers {
+public class VoucherController {
 
-    private static final Logger log = LoggerFactory.getLogger(VoucherControllers.class);
+    private static final Logger log = LoggerFactory.getLogger(VoucherController.class);
 
     @Autowired
     private VoucherService voucherService;

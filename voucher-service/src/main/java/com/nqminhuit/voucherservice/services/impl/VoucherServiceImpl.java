@@ -17,11 +17,19 @@ public class VoucherServiceImpl implements VoucherService {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
 
-    @Autowired
     private VoucherRepository voucherRepository;
 
-    @Autowired
     private VoucherMapper voucherMapper;
+
+    @Autowired
+    public void setVoucherRepository(VoucherRepository voucherRepository) {
+        this.voucherRepository = voucherRepository;
+    }
+
+    @Autowired
+    public void setVoucherMapper(VoucherMapper voucherMapper) {
+        this.voucherMapper = voucherMapper;
+    }
 
     @Override
     public List<VoucherDto> findAllVouchersByPhoneNumber(String phoneNumber) {

@@ -15,8 +15,12 @@ public class KafkaReceiveCodeConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaReceiveCodeConsumer.class);
 
-    @Autowired
     private VoucherService voucherService;
+
+    @Autowired
+    public void setVoucherService(VoucherService voucherService) {
+        this.voucherService = voucherService;
+    }
 
     @KafkaListener(
         topics = KafkaTopicConstants.RECEIVE_CODE,
