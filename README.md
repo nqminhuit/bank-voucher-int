@@ -163,7 +163,7 @@ Go to each project and execute these commands:
 $ mvn clean test
 ```
 
-To see code coverage:
+To see code coverage (services only):
 ```bash
 $ mvn jacoco:report # need file jacoco.exec, generated at $ mvn test
 # test coverage is generated at: target/site/jacoco/index.html

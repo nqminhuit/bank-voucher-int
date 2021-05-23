@@ -19,8 +19,12 @@ public class VoucherCodeResponseController {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherCodeResponseController.class);
 
-    @Autowired
     private KafkaReceiveCodeProducer kafkaReceiveCodeProducer;
+
+    @Autowired
+    public void setKafkaReceiveCodeProducer(KafkaReceiveCodeProducer producer) {
+        this.kafkaReceiveCodeProducer = producer;
+    }
 
     @PostMapping("/voucher-code/vps/response")
     public void handleResponseCallback(@RequestBody ResponseVoucherModel body) {

@@ -18,21 +18,29 @@ public class KafkaRequestCodeConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaRequestCodeConsumer.class);
 
-    @Autowired
     private VoucherProviderClient vpsClient;
 
-    @Autowired
     private KafkaReceiveCodeProducer kafkaReceiveCodeProducer;
 
     @Autowired
     private ObjectMapper jsonMapper;
+
+    @Autowired
+    public void setKafkaReceiveCodeProducer(KafkaReceiveCodeProducer kafkaReceiveCodeProducer) {
+        this.kafkaReceiveCodeProducer = kafkaReceiveCodeProducer;
+    }
+
+    @Autowired
+    public void setVoucherProviderClient(VoucherProviderClient vpsClient) {
+        this.vpsClient = vpsClient;
+    }
 
     @KafkaListener(topics = KafkaTopicConstants.REQUEST_CODE, groupId = "req-group")
     public void listenToRequestCode(String phoneNumber) throws IllegalArgumentException {
         validatePhoneNumber(phoneNumber);
 
         var responseBody = vpsClient.requestForVoucherCode(phoneNumber).body(); // cant be null
-        log.info("code response: {} from request for phoneNumber: {}", responseBody, phoneNumber);
+        log.info("code response: '{}' from request for phoneNumber: '{}'", responseBody, phoneNumber);
 
         ResponseVoucherModel responseModel;
         try {

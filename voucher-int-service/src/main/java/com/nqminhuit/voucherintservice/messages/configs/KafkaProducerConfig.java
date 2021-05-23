@@ -15,8 +15,7 @@ public class KafkaProducerConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;
 
-    @Bean
-    public ProducerFactory<String, ReceiveCodeMsg> receiveCodeMsgProducerFactory() {
+    private ProducerFactory<String, ReceiveCodeMsg> receiveCodeMsgProducerFactory() {
         return new DefaultKafkaProducerFactory<>(
             CentralKafkaProducerConfig.jsonProducerConfigs(bootstrapServer));
     }
