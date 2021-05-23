@@ -18,14 +18,26 @@ public class VoucherServiceClientImpl implements VoucherServiceClient {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherServiceClientImpl.class);
 
-    @Value("${bank-voucher-int.voucher-service.server}")
     private String voucherServiceUri;
 
-    @Value("${gateway.request.protocol}")
     private String requestProtocol;
 
-    @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${bank-voucher-int.voucher-service.server}")
+    public void setVoucherServiceUri(String voucherServiceUri) {
+        this.voucherServiceUri = voucherServiceUri;
+    }
+
+    @Value("${gateway.request.protocol}")
+    public void setRequestProtocol(String requestProtocol) {
+        this.requestProtocol = requestProtocol;
+    }
+
+    @Autowired
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public List<VoucherDto> findAllVouchersByPhoneNumber(String phoneNumber) {

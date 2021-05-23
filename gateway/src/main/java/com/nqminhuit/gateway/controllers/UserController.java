@@ -22,8 +22,12 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/sign-up")
     AuthResponseModel signUpUser(@Valid @RequestBody UserSignUpRequestModel body) {

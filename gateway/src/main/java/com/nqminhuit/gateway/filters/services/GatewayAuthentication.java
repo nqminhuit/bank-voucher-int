@@ -43,7 +43,10 @@ public class GatewayAuthentication {
     }
 
     private static Date minsFromNow(int mins) {
-        return Date.from(ZonedDateTime.now().plus(mins, ChronoUnit.MINUTES).toInstant());
+        return Date.from(ZonedDateTime.now()
+            .plus(mins, ChronoUnit.MINUTES)
+            .truncatedTo(ChronoUnit.SECONDS)
+            .toInstant());
     }
 
 }

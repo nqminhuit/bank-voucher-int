@@ -21,17 +21,33 @@ public class VoucherController {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherController.class);
 
-    @Value("${bank-voucher-int.gateway.redisTtlSeconds}")
     private Long redisRecordTtl;
 
-    @Autowired
     private KafkaRequestCodeProducer kafkaProducer;
 
-    @Autowired
     private Jedis jedis;
 
-    @Autowired
     private VoucherServiceClient voucherServiceClient;
+
+    @Autowired
+    public void setKafkaProducer(KafkaRequestCodeProducer kafkaProducer) {
+        this.kafkaProducer = kafkaProducer;
+    }
+
+    @Autowired
+    public void setJedis(Jedis jedis) {
+        this.jedis = jedis;
+    }
+
+    @Autowired
+    public void setVoucherServiceClient(VoucherServiceClient voucherServiceClient) {
+        this.voucherServiceClient = voucherServiceClient;
+    }
+
+    @Value("${bank-voucher-int.gateway.redisTtlSeconds}")
+    public void setRedisRecordTtl(Long ttl) {
+        this.redisRecordTtl = ttl;
+    }
 
     @PostMapping("/voucher")
     ResponseEntity<String> requestVoucher(@RequestParam("phoneNumber") String phoneNumber,
